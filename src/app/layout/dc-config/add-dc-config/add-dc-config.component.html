@@ -1,0 +1,87 @@
+<div class="col-md-12 page-heading">
+  <h5> {{ DcConfigId ? 'Update Company' : 'Add New Company' }} </h5>
+</div>
+
+<div class="page-inner">
+  <div class="col-md-12 form-height p-0 mt-3">
+    <div class="col-md-11 row p-0">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Upload File <span class="mandatory">*</span></label>
+          <input type="file" (change)="onFileChange($event)" accept="image/x-png, image/jpeg" #fileInput
+            class="form-control UploadFile" placeholder="" [disabled]="enableFields" />
+        </div>
+      </div>
+      <div class="col-md-8" *ngIf="url">
+        <img [src]="url" height="200">
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Company Name <span class="mandatory">*</span></label>
+          <input type="text" class="form-control" [(ngModel)]="configDetails.companyName"
+            placeholder="Enter Company Name" [disabled]="enableFields" />
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Company Address<span class="mandatory">*</span></label>
+          <textarea type="text" rows="4" class="form-control" [(ngModel)]="configDetails.companyAddress"
+            placeholder="Enter Company Address" [disabled]="enableFields"></textarea>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Email <span class="mandatory">*</span></label>
+          <input type="email" class="form-control" [(ngModel)]="configDetails.email" placeholder="Enter email"
+            [disabled]="enableFields" />
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Phone NO. <span class="mandatory">*</span></label>
+          <input type="number" class="form-control" [(ngModel)]="configDetails.contactNo"
+            placeholder="Enter Contact NO." [disabled]="enableFields" />
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Company GST NO. </label>
+          <input type="text" class="form-control" [(ngModel)]="configDetails.companyGstNo"
+            placeholder="Enter Alternative Contact NO." [disabled]="enableFields" />
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Company PAN NO. <span class="mandatory">*</span></label>
+          <input type="text" class="form-control" [(ngModel)]="configDetails.companyPanNo"
+            placeholder="Enter Emergency Contact NO." [disabled]="enableFields" />
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Location <span class="mandatory">*</span></label>
+          <input type="text" class="form-control" [(ngModel)]="configDetails.location" placeholder="Enter Location"
+            [disabled]="enableFields" />
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Terms & Conditions:<span class="mandatory">*</span></label>
+          <textarea class="form-control" rows="5" [(ngModel)]="configDetails.termsandCond"
+            placeholder="Terms and Conditions" name="Terms And Conditions" [disabled]="enableFields"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <button class="btn btn-secondary" (click)="cancel()">Cancel</button>
+    <button class=" btn btn-primary ml-3" (click)="saveDCconfig()" [disabled]="validate()">
+      Save</button>
+    <button class="btn btn-success ml-3" *ngIf="!DcConfigId" (click)="reset()">Reset</button>
+  </div>
+
+  <!-- </div> -->
+  <!-- </div> -->
+
+</div>

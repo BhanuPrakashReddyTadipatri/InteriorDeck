@@ -1,0 +1,21 @@
+#accordion1{
+     overflow-x: hidden;
+}
+.scroll{
+    overflow-y: auto;
+    height: 440px;
+}
+.ng-sidebar {
+    background: red;
+    width: 13rem;
+}
+
+.ng-sidebar--right {
+    color: black !important;
+    background: antiquewhite;
+    width: 12rem;
+    overflow-x: hidden;
+}
+.comments{
+    bottom: 0;
+}

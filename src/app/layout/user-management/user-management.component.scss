@@ -1,0 +1,10 @@
+.profile-name-display {
+    font-size: 28px;
+    font-weight: 300;
+}
+
+.form-height {
+    min-height: calc(100vh - 150px);
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
+}

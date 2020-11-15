@@ -1,0 +1,106 @@
+<div>
+  <div *ngIf="!editDate">
+    <div class="col-md-5 inline p-l-0">
+      <label>Start Date:</label><label class="label-class"> &nbsp; {{actualStartDate | amDateFormat:'LL'}}</label>
+    </div>
+    <div class="col-md-5 inline">
+      <label>End Date:</label><label class="label-class"> &nbsp; {{actualEndDate | amDateFormat:'LL'}}</label>
+    </div>
+    <div class="col-md-2 inline p-l-0">
+      <span class="btn-link" style="cursor:pointer" (click)="editModeOn()">
+        <i class="far fa-edit action-icon"></i>Change dates
+      </span>
+    </div>
+  </div>
+  <div *ngIf="editDate">
+    <div class="col-md-5 inline p-l-0">
+      <label>Start Date<span class="mandatory">*</span> </label>
+      <input placeholder="Select start date" class="form-control" [(ngModel)]="actualStartDate" [min]="todayDate"
+        [max]="actualEndDate?actualEndDate:''" [owlDateTimeTrigger]="dt1" [owlDateTime]="dt1">
+      <owl-date-time [pickerType]="'calendar'" #dt1></owl-date-time>
+    </div>
+    <div class="col-md-5 inline p-l-0">
+      <label>End Date<span class="mandatory">*</span> </label>
+      <input placeholder="Select start date" class="form-control" [(ngModel)]="actualEndDate"
+        [min]="actualStartDate?actualStartDate:''" [owlDateTimeTrigger]="dt2" [owlDateTime]="dt2">
+      <owl-date-time [pickerType]="'calendar'" #dt2></owl-date-time>
+    </div>
+    <div class="col-md-2 inline">
+      <span class="btn-link" style="cursor:pointer" (click)="editModeOff()">
+        <i class="far fa-calendar-check action-icon"></i>Done
+      </span>
+    </div>
+  </div>
+  <div class="p-t-1">
+    <span class="btn-link" style="cursor:pointer" (click)="viewCalendar = !viewCalendar"><i
+        class="far fa-calendar-alt"></i> Show
+      Calendar</span>
+  </div>
+  <hr>
+  <div *ngIf="selectedEngineers.length != 0" class="card card-body" style="display:list-item;">
+    <label class="label-class">Selected engineers</label> <br>
+    <ng-container *ngFor="let engineer of selectedEngineers">
+      <span class=" badge badge-pill badge-primary inline">{{engineer.fullName}} <span
+          (click)="updatEngineersList(engineer)"><i style="cursor:pointer;" class="far fa-times-circle"></i></span></span>
+    </ng-container>
+    <br>
+    <br>
+    <label>{{selectedEngineers.length}} &nbsp; people selected </label>
+  </div>
+
+  <div *ngIf="viewCalendar" style="margin:auto;">
+    <div class="card card-body">
+      <ng-container>
+        <ng-fullcalendar #fullcalendar (dateClick)="dateClick($event)" (eventDragStop)="eventDragStop($event)"
+          [eventsModel]="eventsModel" [options]="options" (eventClick)="eventClick($event)"></ng-fullcalendar>
+      </ng-container>
+    </div>
+  </div>
+  <div class="card card-body">
+    <label class="table-responsive label-class ">Select engineers</label>
+    <div class="table-responsive">
+      <table datatable *ngIf="engineersList.length!=0" class="table row-border hover table-striped table-hover"
+        style="width:100%;">
+        <thead style="display:none">
+          <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let engineer of engineersList" style="cursor:pointer;" (click)="updatEngineersList(engineer)">
+            <td>
+              <span> {{engineer.fullName}} </span>
+            </td>
+            <td>
+              <span [ngClass]="{'available-engineers': engineer.status==='Available','not-available-engineers':engineer.status === 'Unavailable'}" >{{engineer.status}} </span>
+            </td>
+            <td>
+              <span class="right-align blue-label" [ngStyle]="{'display': checkEnineersList(engineer)?'':'none'}"><i
+                  class="fas fa-check"></i></span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngIf="!engineersList">
+      <label class="label-class">No engineers available..!!</label>
+    </div>
+    <div class="m-t-15">
+      <label class="weight-bold">Additional Emails </label>
+      <div class="row each-mail">
+        <div class="col-md-4">
+            <input class="form-control" type="text" placeholder="example@email.com" [(ngModel)]="newEmail">
+        </div>
+        <div class="col-md-8">
+          <button class="btn btn-sm btn-primary" (click)="addEmailId()" [disabled]="validateEmail(newEmail)"><i class="fa fa-plus"></i></button>
+        </div>
+      </div>
+      <div class="m-t-15">
+        <label *ngFor="let email of emailIds; let _e=index" class="badge badge-pill badge-primary inline" (click)="editEmail(email, _e)">{{ email.email }} &nbsp; 
+          <i class="fa fa-times cursor-pointer" (click)="deleteEmailId(email, _e, $event)"></i></label>
+      </div>
+    </div>
+  </div>
+</div>

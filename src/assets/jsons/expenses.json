@@ -1,0 +1,92 @@
+{
+    "status": true,
+    "message": "Success",
+    "data": {
+      "tableData": {
+        "bodyContent": [
+          {
+            "ticketId": "TCK_dd902",
+            "expenseId":"1",
+            "siteName": "UltraTech Cement Limited -  Baga Cement Works",
+            "createTime": "04-29-2019 06:07:30",
+            "read_status": true,
+            "ticket_type": "GLens"
+          },
+          {
+            "ticketId": "TCK_ec936",
+            "expenseId":"2",
+            "siteName": "MB Power (Madhya Pradesh) Limited",
+            "createTime": "04-25-2019 10:45:32",
+            "read_status": true,
+            "ticket_type": "GLens"
+          },
+          {
+            "ticketId": "TCK_2b77d",
+            "expenseId":"3",
+            "siteName": " COROMANDEL PESTICIDES LTD - Ranipet",
+            "createTime": "04-24-2019 14:05:14",
+            "read_status": true,
+            "ticket_type": "GLens"
+          },
+          {
+            "ticketId": "TCK_fb5cd",
+            "expenseId":"4",
+            "siteName": "TANFAC INDUSTRIES LTD",
+            "createTime": "04-24-2019 13:42:16",
+            "read_status": true,
+            "ticket_type": "GLens"
+          },
+          {
+            "ticketId": "TCK_4f9ee",
+            "expenseId":"5",
+            "siteName": "Shrikrishna Khandsari Sugar mills",
+            "createTime": "04-24-2019 12:43:59",
+            "read_status": true,
+            "ticket_type": "GLens"
+          },
+          {
+            "ticketId": "TCK_a941a",
+            "expenseId":"6",
+            "siteName": "Shree Satpuda Tapi Parisar Sahakari Sakhar Karkhana Ltd",
+            "createTime": "04-24-2019 10:56:05",
+            "read_status": true,
+            "ticket_type": "GLens"
+          },
+          {
+            "ticketId": "TCK_a7000",
+            "expenseId":"7",
+            "siteName": "THE KCP LIMITED",
+            "createTime": "04-24-2019 09:41:20",
+            "read_status": true,
+            "ticket_type": "GLens"
+          }
+        ],
+        "headerContent": [
+          {
+            "key": "ticketId",
+            "label": "Ticket ID"
+          },
+          {
+            "key": "expenseId",
+            "label": "Expense ID"
+          },
+          {
+            "key": "siteName",
+            "label": "Site Name"
+          },
+          {
+            "key": "createTime",
+            "label": "Created Time"
+          },
+          {
+            "key": "read_status",
+            "label": "Read Status"
+          },
+          {
+            "key": "ticket_type",
+            "label": "Ticket Type"
+          }
+        ]
+      }
+    }
+  }

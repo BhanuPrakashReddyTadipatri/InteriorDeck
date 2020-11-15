@@ -1,0 +1,442 @@
+<div class="page-inner">
+  <div class="col-12 ticket-header">
+    <p *ngIf="ticketDetails" class="ticket-header-title display-inline-block">Site Visit to
+      {{ticketDetails.siteDetails.siteName}}</p>
+    <div class="display-inline-block site-engineer-avatar">
+      <ng-container *ngFor="let engineer of engineerAvatar">
+        <span *ngIf="showaAvatar" class="user-avatar site-visit-avatars display-inline-block"
+          ngbTooltip="{{engineer.userName}}" style="margin-top: -7px;"><img [src]="engineer.profilePicture"
+            alt=""></span>
+      </ng-container>
+    </div>
+  </div>
+  <div class="col-12 ticket-container" style="padding-left: 0px">
+    <div *ngIf="ticketDetails" class="col-4 section-ticket-details slide-in-left display-inline-block">
+      <button class="btn btn-sm btn-primary btn-pos-ab" *ngIf="checkEditAvailability(ticketDetails)"
+        (click)="editSiteVisit(ticketDetails.ticketId)">
+        <i class="fa fa-pencil-alt"></i>
+      </button>
+      <div class="col-6 display-inline-block ticket-detail-padding">
+        <label class="col-12 ticket-label">Ticket ID </label> <label class="col-12 ">
+          {{ticketDetails.ticketId}}</label>
+      </div>
+
+      <div class="col-6 display-inline-block ticket-detail-padding">
+        <label class="col-12 ticket-label">Ticket Status</label> <label class="col-12 ">
+          {{statusParser(ticketDetails.ticketStatus)}}</label>
+      </div>
+
+      <div class="col-6 display-inline-block ticket-detail-padding">
+        <label class="col-12 ticket-label">Created By</label> <label class="col-12 ">
+          {{ticketDetails.activityInfo.updatedBy}}</label>
+      </div>
+
+      <div class="col-6 display-inline-block ticket-detail-padding">
+        <label class="col-12 ticket-label">Created Time</label> <label class="col-12 ">
+          {{ticketDetails.activityTimeline.ticketCreatedTime  | amFromUtc | amLocal | amDateFormat:'MMMM Do YYYY, h:mm a'}}</label>
+      </div>
+
+      <div class="col-6 display-inline-block ticket-detail-padding">
+        <label class="col-12 ticket-label">Purpose</label> <label class="col-12 ">
+          {{ticketDetails.general.purposeDescription }}</label>
+      </div>
+
+      <div class="col-6 display-inline-block ticket-detail-padding">
+        <label class="col-12 ticket-label">Category</label> <label class="col-12 ">
+          {{ticketDetails.general.category }}</label>
+      </div>
+
+      <div class="col-6 display-inline-block ticket-detail-padding">
+        <label class="col-12 ticket-label">Start date</label> <label class="col-12 ">
+          {{ticketDetails.general.expectedStartDate |amDateFormat:'LL'}}</label>
+      </div>
+
+      <div class="col-6 display-inline-block ticket-detail-padding">
+        <label class="col-12 ticket-label">End date</label> <label class="col-12 ">
+          {{ticketDetails.general.expectedEndDate |amDateFormat:'LL'}}</label>
+      </div>
+      
+      <div class="col-6 display-inline-block ticket-detail-padding">
+        <label class="col-12 ticket-label">Last Updated Time</label> <label class="col-12 ">
+          {{ticketDetails.activityInfo.updatedTime  | amFromUtc | amLocal | amDateFormat:'MMMM Do YYYY, h:mm a'}}</label>
+      </div>
+
+      <div class="col-12 display-inline-block ticket-detail-padding">
+        <label *ngIf="showAssignedEngineers " class="col-12 ticket-label">Site Engineers</label>
+        <ng-container *ngIf="showAssignedEngineers && ticketDetails?.assignedEngineers.length>0">
+          <label class="m-l-10">
+            <ng-container *ngFor="let name of ticketDetails.assignedEngineers">
+              <label class=" display-inline-block">{{ name }},&nbsp;</label>
+            </ng-container>
+          </label>
+        </ng-container>
+        <label *ngIf="showDownloadMOM" (click)="createMOM()" class="right-align btn-link"
+          style="cursor:pointer;">Download MOM <i class="fas fa-file-download"></i></label>
+
+        <div *ngIf="timeLineHaveData" class="card-body border-top">
+          <h4 class="card-title"> Activity timeline </h4>
+          <ul class="timeline timeline-dashed-line">
+            <!-- .timeline-item -->
+            <li class="timeline-item">
+              <!-- .timeline-figure -->
+              <div class="timeline-figure">
+                <span class="tile tile-circle tile-xs " [ngClass]="{'brand-ui01': timeLine.ticketCreatedTime}"><i
+                    class="fa fa-check"></i></span>
+              </div><!-- /.timeline-figure -->
+              <!-- .timeline-body -->
+              <div class="timeline-body">
+                <h6 class="timeline-heading"> Site Visit schedule was created </h6><span
+                  class="timeline-date">{{timeLine.ticketCreatedTime?(timeLine.ticketCreatedTime | amFromUtc | amLocal | amDateFormat:'MMMM Do YYYY, h:mm a'):''}}</span>
+              </div><!-- /.timeline-body -->
+            </li><!-- /.timeline-item -->
+            <!-- .timeline-item -->
+            <li class="timeline-item">
+              <!-- .timeline-figure -->
+              <div class="timeline-figure">
+                <span class="tile tile-circle tile-xs " [ngClass]="{'brand-ui01': timeLine.siteReadinessTime}"><i
+                    *ngIf="timeLine.siteReadinessTime" class="fa fa-check"></i></span>
+              </div><!-- /.timeline-figure -->
+              <!-- .timeline-body -->
+              <div class="timeline-body">
+                <h6 class="timeline-heading"> Completed Site Readiness
+                </h6><span
+                  class="timeline-date">{{timeLine.siteReadinessTime?(timeLine.siteReadinessTime | amFromUtc | amLocal | amDateFormat:'MMMM Do YYYY, h:mm a'):''}}</span>
+              </div><!-- /.timeline-body -->
+            </li><!-- /.timeline-item -->
+            <!-- .timeline-item -->
+            <li class="timeline-item">
+              <!-- .timeline-figure -->
+              <div class="timeline-figure">
+                <span class="tile tile-circle tile-xs " [ngClass]="{'brand-ui01': timeLine.engineersAssignedTime}"><i
+                    *ngIf="timeLine.engineersAssignedTime" class="fa fa-check"></i></span>
+              </div><!-- /.timeline-figure -->
+              <!-- .timeline-body -->
+              <div class="timeline-body">
+                <h6 class="timeline-heading"> Site Engineers were assigned </h6><span
+                  class="timeline-date">{{timeLine.engineersAssignedTime?(timeLine.engineersAssignedTime | amFromUtc | amLocal | amDateFormat:'MMMM Do YYYY, h:mm a'):''}}</span>
+              </div><!-- /.timeline-body -->
+            </li><!-- /.timeline-item -->
+            <!-- .timeline-item -->
+            <li class="timeline-item">
+              <!-- .timeline-figure -->
+              <div class="timeline-figure">
+                <span class="tile tile-circle tile-xs " [ngClass]="{'brand-ui01': timeLine.visitStartedTime}"><i
+                    *ngIf="timeLine.visitStartedTime" class="fa fa-check"></i></span>
+              </div><!-- /.timeline-figure -->
+              <!-- .timeline-body -->
+              <div class="timeline-body">
+                <h6 class="timeline-heading"> Site Visit started
+                </h6><span
+                  class="timeline-date">{{timeLine.visitStartedTime?(timeLine.visitStartedTime | amFromUtc | amLocal | amDateFormat:'MMMM Do YYYY, h:mm a'):''}}</span>
+              </div><!-- /.timeline-body -->
+            </li><!-- /.timeline-item -->
+            <!-- .timeline-item -->
+            <li class="timeline-item">
+              <!-- .timeline-figure -->
+              <div class="timeline-figure">
+                <span class="tile tile-circle tile-xs " [ngClass]="{'brand-ui01': timeLine.goalUpdatedTime}"><i
+                    *ngIf="timeLine.goalUpdatedTime" class="fa fa-check"></i></span>
+              </div><!-- /.timeline-figure -->
+              <!-- .timeline-body -->
+              <div class="timeline-body">
+                <h6 class="timeline-heading"> Goals were updated
+                </h6><span
+                  class="timeline-date">{{timeLine.goalUpdatedTime?(timeLine.goalUpdatedTime | amFromUtc | amLocal | amDateFormat:'MMMM Do YYYY, h:mm a'):''}}</span>
+              </div><!-- /.timeline-body -->
+            </li><!-- /.timeline-item -->
+            <!-- .timeline-item -->
+            <li class="timeline-item">
+              <!-- .timeline-figure -->
+              <div class="timeline-figure">
+                <span class="tile tile-circle tile-xs" [ngClass]="{'brand-ui01': timeLine.visitCompletedTime}"><i
+                    *ngIf="timeLine.visitCompletedTime" class="fa fa-check"></i></span>
+              </div><!-- /.timeline-figure -->
+              <!-- .timeline-body -->
+              <div class="timeline-body">
+                <h6 class="timeline-heading"> Visit completed </h6>
+                <span
+                  class="timeline-date">{{timeLine.visitCompletedTime?(timeLine.visitCompletedTime | amFromUtc | amLocal | amDateFormat:'MMMM Do YYYY, h:mm a'):''}}</span>
+              </div><!-- /.timeline-body -->
+            </li><!-- /.timeline-item -->
+            <!-- .timeline-item -->
+          </ul><!-- /.timeline -->
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="ticketDetails" class="col-md-8 section-ticket-cards fade-in-top display-inline-block">
+      <div id="accordion0" *ngIf="showReadiness">
+        <div class="card">
+          <div class="card-header" id="headingZero">
+            <h6 class="mb-0" data-toggle="collapse" data-target="#collapseZero" aria-expanded="true"
+              aria-controls="collapseZero">
+              <span class="ticket-card-title"><i class="far fa-check-circle"></i>&nbsp; Readiness Status </span> <span
+                class=" right-align"> <i class="fas fa-chevron-down"></i></span>
+            </h6>
+          </div>
+          <div id="collapseZero" class="collapse" aria-labelledby="headingZero" data-parent="#accordion0">
+            <div class="card-body">
+              <div>
+                <label class="col-md-6 ticket-label">Template Type : &nbsp;
+                  {{ticketDetails.siteReadinessStatus.templateName}} </label>
+              </div>
+              <hr>
+              <div *ngIf="!readinessDescription">
+                <ng-container *ngFor="let conditionItem of ticketDetails.siteReadinessStatus.requirements">
+                  <div class="hover-background">
+                    <div class="col-md-8 inline">
+                      <label>{{conditionItem.condition}}</label>
+                    </div>
+                    <div class="col-md-3 inline v-a-t disable-click text-align-end">
+                      <label class="p-8 cursor-pointer" (click)="ready(conditionItem)" ngbTooltip="Ready"> <i
+                          class="fas fa-check readiness-icon gray-label"
+                          [ngClass]="{'green-label':readyCheck(conditionItem)}"></i>
+                      </label>
+                      <label class="p-8 cursor-pointer" (click)="notReady(conditionItem)" ngbTooltip="Not Ready !">
+                        <i class="fas fa-times readiness-icon gray-label"
+                          [ngClass]="{'red-label': notReadyCheck(conditionItem)}"></i>
+                      </label>
+                      <label class="p-8 cursor-pointer" (click)="waiting(conditionItem)" ngbTooltip="waiting"><i
+                          class="fas fa-check-circle readiness-icon gray-label"
+                          [ngClass]="{'yellow-label': waitingCheck(conditionItem)}"></i>
+                      </label>
+                    </div>
+                    <ng-template #popContent>
+                      <textarea class="pop-textarea form-control" rows="3" [(ngModel)]="conditionItem.notes" disabled>
+                  </textarea>
+                    </ng-template>
+                    <ng-template #popTitle>Notes</ng-template>
+                    <span *ngIf="conditionItem.notes.length>0" class=" notes-icon inline" ngbTooltip="Notes"
+                      [autoClose]="'outside'" #p="ngbPopover" [ngbPopover]="popContent" [popoverTitle]="popTitle"
+                      container="body">
+                      <i *ngIf="conditionItem.notes.length>0" class="fas fa-sticky-note action-icon"></i>
+                      <i *ngIf="conditionItem.notes.length===0" class="far fa-sticky-note action-icon"></i>
+                    </span>
+                  </div>
+                </ng-container>
+              </div>
+              <div *ngIf="readinessDescription">
+                <div class="col-md-12">
+                  <label>{{ticketDetails.siteReadinessStatus.description}}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="accordion3">
+        <div class="card">
+          <div class="card-header" id="headingThree">
+            <h6 class="mb-0" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true"
+              aria-controls="collapseThree">
+              <span class="ticket-card-title"><i class="far fa-building"></i>&nbsp; Site Details</span> <span
+                class=" right-align"> <i class="fas fa-chevron-down"></i></span>
+            </h6>
+          </div>
+          <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion3">
+            <div class="card-body">
+              <label class="col-md-4">Site name</label> <label class="col-md-4 label-class">
+                {{ticketDetails.siteDetails.siteName}}</label><br>
+              <label class="col-md-4">State</label> <label class="col-md-4 label-class">
+                {{ticketDetails.siteDetails.state}}</label><br>
+              <label class="col-md-4">District</label> <label class="col-md-4 label-class">
+                {{ticketDetails.siteDetails.district}}</label><br>
+              <label class="col-md-4">Place </label> <label class="col-md-4 label-class">
+                {{ticketDetails.siteDetails.place}}</label><br>
+              <label class="col-md-4">Landmark </label> <label class="col-md-4 label-class">
+                {{ticketDetails.siteDetails.landmark}}</label><br><br>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="accordion4" *ngIf="ticketDetails.keyGoals">
+        <div class="card">
+          <div class="card-header" id="headingFour">
+            <h6 class="mb-0" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true"
+              aria-controls="collapseFour">
+              <span class="ticket-card-title"><i class="far fa-calendar-alt"></i>&nbsp; Goals</span> <span
+                class=" right-align"> <i class="fas fa-chevron-down"></i></span>
+            </h6>
+          </div>
+          <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion4">
+            <div class="card-body">
+              <div *ngIf="showGoalActions">
+                <div class="col-md-8 inline label-class"> Goals</div>
+                <div class="col-md-3 inline label-class"> Status</div>
+                <div class="col-md-1 inline label-class"> Notes</div>
+              </div>
+              <br>
+              <ng-container *ngFor="let goal of ticketDetails.keyGoals; let i=index;">
+                <div class="col-md-8 inline">
+                  <label [ngClass]="{'completed': goal.status==='completed'}">{{i+1}}. &nbsp; {{goal.goal}}</label>
+                </div>
+                <div *ngIf="showGoalActions" class="col-md-3 inline">
+                  <label>{{goal.status}}</label>
+                </div>
+                <div *ngIf="showGoalActions" class="inline col-md-1">
+                  <ng-template #popContent>
+                    <textarea class="pop-textarea form-control" rows="3" [(ngModel)]="goal.notes" disabled>
+                            </textarea>
+                  </ng-template>
+                  <ng-template #popTitle>Notes</ng-template>
+                  <span *ngIf="goal.notes.length>0" class="col-md-1 notes-icon inline" ngbTooltip="Notes"
+                    [autoClose]="'outside'" #p="ngbPopover" [ngbPopover]="popContent" [popoverTitle]="popTitle"
+                    container="body">
+                    <i *ngIf="goal.notes.length>0" class="fas fa-sticky-note action-icon"></i>
+                    <i *ngIf="goal.notes.length===0" class="far fa-sticky-note action-icon"></i>
+                  </span>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="showMaterials" id="accordion5">
+        <div class="card">
+          <div class="card-header" id="headingFive">
+            <h6 class="mb-0" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true"
+              aria-controls="collapseFive">
+              <span class="ticket-card-title"><i class="fas fa-pencil-ruler"></i>&nbsp; Material Required</span> <span
+                class=" right-align"> <i class="fas fa-chevron-down"></i></span>
+            </h6>
+          </div>
+          <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion5">
+            <div class="card-body">
+              <div *ngIf="ticketDetails.materialsRequired.length">
+                <div class="table-responsive">
+                  <table class="table table-hover table-bordered table-material">
+                    <thead>
+                      <tr>
+                        <th> S.No. </th>
+                        <th> Material name </th>
+                        <th> Quantity </th>
+                        <th> Device ID </th>
+                      </tr>
+                    </thead>
+                    <tr *ngFor="let row of ticketDetails.materialsRequired;let i = index">
+                      <td> {{i+1}}</td>
+                      <td> {{row.materialName}}</td>
+                      <td>{{row.quantity}}</td>
+                      <td>{{row.deviceId ? row.deviceId : 'NA'}}</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="accordion6">
+        <div class="card">
+          <div class="card-header" id="headingSix">
+            <h6 class="mb-0" data-toggle="collapse" data-target="#collapseSix" aria-expanded="true"
+              aria-controls="collapseSix">
+              <span class="ticket-card-title"><i class="far fa-address-card"></i>&nbsp; Site Contact</span> <span
+                class=" right-align"> <i class="fas fa-chevron-down"></i></span>
+            </h6>
+          </div>
+          <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordion6">
+            <div class="card-body">
+              <div *ngIf="ticketDetails.siteContact.length">
+                <div class="table-responsive">
+                  <table class="table table-hover table-bordered table-responsive">
+                    <thead>
+                      <tr>
+                        <th> S.No. </th>
+                        <th> Name </th>
+                        <th> Designation </th>
+                        <th> Email </th>
+                        <th> Mobile </th>
+                      </tr>
+                    </thead>
+                    <tr *ngFor="let row of ticketDetails.siteContact;let i = index">
+                      <td> {{i+1}}</td>
+                      <td> {{row.name}} </td>
+                      <td> {{row.designation}}</td>
+                      <td> {{row.email}}</td>
+                      <td> {{row.contactNo}} </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="showUploadDetails" id="accordion7">
+        <div class="card">
+          <div class="card-header" id="headingSeven">
+            <h6 class="mb-0" data-toggle="collapse" data-target="#collapseSeven" aria-expanded="true"
+              aria-controls="collapseSeven">
+              <span class="ticket-card-title"><i class="far fa-file-alt"></i>&nbsp; Uploaded Documents</span> <span
+                class=" right-align"> <i class="fas fa-chevron-down"></i></span>
+            </h6>
+          </div>
+          <div id="collapseSeven" class="collapse" aria-labelledby="headingSeven" data-parent="#accordion7">
+            <div class="card-body">
+              <div *ngIf="uploadFileDetails.length>0" class="table-responsive">
+                <table class="table table-hover table-bordered table-responsive">
+                  <thead>
+                    <tr>
+                      <th> S.No. </th>
+                      <th> File Name </th>
+                      <th> Description </th>
+                      <th> Uploaded Time </th>
+                      <th> </th>
+                    </tr>
+                  </thead>
+                  <tr *ngFor="let row of uploadFileDetails;let i = index">
+                    <td> {{i+1}}</td>
+                    <td> {{row.documentName}} </td>
+                    <td> {{row.description ? row.description : 'NA'}} </td>
+                    <td> {{row.uploadedTime  | amFromUtc | amLocal | amDateFormat:'MMMM Do YYYY, h:mm a' }}</td>
+                    <td>
+                      <span class="display-inline-table " (click)="downloadFile(row.documentId)">
+                        <i class="fas fa-download action-icon" aria-hidden="true"></i>
+                      </span>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <div *ngIf="uploadFileDetails.length==0">
+                <label class="label-class"> No files uploaded</label>
+              </div>
+            </div>
+            <div class="card-body">
+              <label class="label-class">
+                MOM Details
+              </label>
+              <div *ngIf="momData.documentId!=null" class="table-responsive">
+                <table class="table table-hover table-bordered table-responsive">
+                  <thead>
+                    <tr>
+                      <th> File Name </th>
+                      <th> Uploaded Time </th>
+                      <th> </th>
+                    </tr>
+                  </thead>
+                  <tr>
+                    <td> {{momData.documentName}} </td>
+                    <td> {{momData.uploadedTime | amFromUtc | amLocal | amDateFormat:'MMMM Do YYYY, h:mm a'}}</td>
+                    <td>
+                      <span class="display-inline-table " (click)="downloadMOM(momData.documentId)">
+                        <i class="fas fa-download action-icon" aria-hidden="true"></i>
+                      </span>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="right-align">
+        <button *ngIf="showAssignEngineers" class="btn btn-primary" (click)="assignEngineers()"> Assign Engineers
+        </button>
+        <button *ngIf="showStartVisit" class="btn btn-primary" (click)="startVisit()">Start Visit</button>
+        <button *ngIf="showFinishVisit" class="btn btn-primary" (click)="finishVisit()">Finish Visit</button>
+      </div>
+    </div>
+  </div>
+</div>

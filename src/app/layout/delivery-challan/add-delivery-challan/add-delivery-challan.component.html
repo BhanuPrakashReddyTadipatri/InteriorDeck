@@ -1,0 +1,433 @@
+<div class="col-md-12 page-heading">
+  <h5 *ngIf="dcStatus !== 'Approved'"> {{ challanId ? 'Update Delivery Challan' : 'Add Delivery Challan' }} </h5>
+  <h5 *ngIf="dcStatus === 'Approved'"> View Delivery Challan </h5>
+</div>
+
+<div class="page-inner">
+  <div class="row form-height mt-2">
+    <div class="col-md-11">
+      <div class="row form-group">
+        <div class="col-md-12">
+          <label class="text-left">
+            <h6>General Info</h6>
+          </label>
+          <button *ngIf="challanId && dcStatus === 'Approved'" class="btn btn-success float-right" ata-toggle="tooltip"
+            data-placement="left" title="Send Email" (click)="sendMail()">
+            <i class="fa fa-envelope" aria-hidden="true"></i> Mail
+          </button>
+          <button *ngIf="challanId && dcStatus === 'Approved'" class="btn btn-primary float-right" ata-toggle="tooltip"
+            data-placement="left" title="Download PDF" (click)="printPDF()">
+            <i aria-hidden="true" class="fas fa-file-pdf"></i> PDF
+          </button>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Delivery Challan Number<span class="mandatory">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="deliveryChallanDetails.challanNo" name="Challan Number"
+              [disabled]="true" placeholder="Enter Challan Number" />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Delivery Challan Label<span class="mandatory">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="deliveryChallanDetails.challanLabel"
+              name="Challan Label" placeholder="Enter Challan Label" [disabled]="disableinputField" />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Date<span class="mandatory">*</span> </label>
+            <input placeholder="Select Date" class="form-control" [(ngModel)]="deliveryChallanDetails.date" name="Date"
+              [owlDateTimeTrigger]="dt1" [owlDateTime]="dt1" [disabled]="disableinputField">
+            <owl-date-time [pickerType]="'calendar'" [startView]="'multi-years'" #dt1></owl-date-time>
+          </div>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col-md-12 text-left">
+          <label>
+            <h6>Consigner Details</h6>
+          </label>
+        </div>
+        <div class="col-md-8">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group" *ngIf="purchaseOrders">
+                <label>Select P.O<span class="mandatory">*</span></label>
+                <ng-select placeholder="Select P.O" [items]="purchaseOrders.bodyContent" [clearable]="false"
+                  [multiple]="false" bindLabel="poNumber" [(ngModel)]="selectedPO" appendTo="body"
+                  [virtualScroll]="true" (ngModelChange)="changePO($event)" class="form-group-table-material"
+                  [disabled]="disableinputField">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>PO Date<span class="mandatory">*</span> </label>
+                <input type="text" class="form-control" [(ngModel)]="deliveryChallanDetails.poDate" [disabled]="true">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Consignee Name:<span class="mandatory">*</span></label>
+                <input type="text" class="form-control" [(ngModel)]="deliveryChallanDetails.consigneeName "
+                  name="Consignee Name" placeholder="Enter Consignee Name" [disabled]="disableinputField" />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Consignee Address:<span class="mandatory">*</span></label>
+                <textarea type="text" class="form-control" [(ngModel)]="deliveryChallanDetails.consigneeAddress "
+                  name="Consignee Address" placeholder="Enter Consignee Address"
+                  [disabled]="disableinputField"></textarea>
+              </div>
+            </div>
+            <div class="col-md-6" *ngIf="selectedPO?.clientName.country=='India'">
+              <div class="form-group">
+                <label>GST N#<span class="mandatory">*</span></label>
+                <input type="text" class="form-control" [(ngModel)]="deliveryChallanDetails.GSTN" name="GSTN"
+                  placeholder="Enter GST" [disabled]="disableinputField" />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Site Name</label>
+                <input type="text" class="form-control" [(ngModel)]="deliveryChallanDetails.siteName" name="Site Name"
+                  placeholder="Enter Site Name" [disabled]="disableinputField" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <div class="row m-0 p-b-10" style="padding: 15px 0px 10px;" *ngIf="selectedPO">
+              <div class="col-12 p-l-0">
+                <table>
+                  <thead></thead>
+                  <tbody>
+                    <tr>
+                      <td style="width: 30%;">
+                        <label class="col-12 ticket-label">Industry Type </label>
+                      </td>
+                      <td>
+                        <label
+                          class="col-12">{{selectedPO.clientName.industry ? selectedPO.clientName.industry : 'NA'}}</label>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="width: 30%;">
+                        <label class="col-12 ticket-label">State </label>
+                      </td>
+                      <td>
+                        <label
+                          class="col-12">{{selectedPO.clientName.state ? selectedPO.clientName.state : 'NA'}}</label>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="width: 30%;">
+                        <label class="col-12 ticket-label">District </label>
+                      </td>
+                      <td>
+                        <label
+                          class="col-12">{{selectedPO.clientName.district ? selectedPO.clientName.district : 'NA'}}</label>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="width: 30%;">
+                        <label class="col-12 ticket-label">City </label>
+                      </td>
+                      <td>
+                        <label class="col-12">{{selectedPO.clientName.city ? selectedPO.clientName.city : 'NA'}}</label>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="width: 30%;">
+                        <label class="col-12 ticket-label">P.O Created by </label>
+                      </td>
+                      <td>
+                        <label class="col-12">{{selectedPO.lastUpdatedBy ? selectedPO.lastUpdatedBy : 'NA'}}</label>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row form-group" *ngIf="challanId && dcStatus === 'Approved'">
+        <ng-container *ngIf="!poForm.dispatchDate && !showDeliveryDetails">
+          <a href="javascript:void(0);" class="pl-3" (click)="showDeliveryDetails = !showDeliveryDetails"
+            style="color: #007bff;">
+            Add Delivery Details <em class="fa fa-plus"></em>
+          </a>
+        </ng-container>
+        <ng-container *ngIf="showDeliveryDetails">
+          <div class="col-md-12 text-left">
+            <label>
+              <h6>Delivery Details</h6>
+            </label>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="weight-bold">Dispatch Date<span class="mandatory">*</span></label>
+              <input placeholder="Select Dispatch date" class="form-control" [(ngModel)]="poForm.dispatchDate"
+                [owlDateTimeTrigger]="dt_dispatchDate" [owlDateTime]="dt_dispatchDate" [disabled]="!poForm.editable">
+              <owl-date-time [pickerType]="'calendar'" #dt_dispatchDate></owl-date-time>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="weight-bold">Delivery Date<span class="mandatory">*</span></label>
+              <input placeholder="Select Delivery date" class="form-control" [(ngModel)]="poForm.deliveryDate"
+                [owlDateTimeTrigger]="dt_deliveryDate" [owlDateTime]="dt_deliveryDate" [disabled]="!poForm.editable">
+              <owl-date-time [pickerType]="'calendar'" #dt_deliveryDate></owl-date-time>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="weight-bold">Carrier<span class="mandatory">*</span></label>
+              <ng-select placeholder="Select Carrier..." [items]="carrierItems" [clearable]="false" bindLabel="label"
+                bindValue="value" [multiple]="false" class="list-form" [(ngModel)]="poForm.carrier"
+                [disabled]="!poForm.editable">
+              </ng-select>
+            </div>
+          </div>
+          <ng-container *ngIf="poForm.carrier">
+            <div class="col-md-4" *ngIf="poForm.carrier === 'Others'">
+              <div class="form-group">
+                <label class="weight-bold">Others<span class="mandatory">*</span></label>
+                <input type="text" class="form-group-table form-control" [(ngModel)]="poForm.carrierOthers"
+                  [disabled]="!poForm.editable" placeholder="New Carrier" />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="weight-bold">Docket Number<span class="mandatory">*</span></label>
+                <input type="text" placeholder="Enter Docket Number" [(ngModel)]="poForm.docketNumber"
+                  class="form-control" [disabled]="!poForm.editable">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="weight-bold">Docket Date<span class="mandatory">*</span></label>
+                <input placeholder="Select Docket date" class="form-control" [(ngModel)]="poForm.docketDate"
+                  [owlDateTimeTrigger]="dt_docketDate" [owlDateTime]="dt_docketDate" [disabled]="!poForm.editable">
+                <owl-date-time [pickerType]="'calendar'" #dt_docketDate></owl-date-time>
+              </div>
+            </div>
+            <div class="col-md-2" *ngIf="poForm.editable">
+              <button class="btn btn-primary" [ngClass]="{'mt-4': poForm.carrier !== 'Others'}" ata-toggle="tooltip"
+                data-placement="left" title="Save delivery Details" (click)="addDeliveryChallan()"
+                [disabled]="!poForm.dispatchDate || !poForm.deliveryDate || !poForm.carrier ||
+                  !poForm.docketNumber || !poForm.docketDate || (poForm.carrier === 'Others' && !poForm.carrierOthers)">
+                Save
+              </button>
+            </div>
+          </ng-container>
+        </ng-container>
+      </div>
+      <div class="row form-group" *ngIf="poForm">
+        <div class="col-md-12" style="overflow-x: auto;">
+          <div class="table-responsive">
+            <table class="table table-hover table-bordered table-material">
+              <thead>
+                <tr>
+                  <th style="width: 25%;"> Material name </th>
+                  <th style="width: 8%;"> Stock </th>
+                  <th style="width: 10%;"> Ordered Qty </th>
+                  <!-- <th style="width: 10%;"> Quantity </th> -->
+                  <th style="width: 15%;"> Supplied/Received Qty </th>
+                  <th style="width: 14%;"> Device ID </th>
+                  <th style="width: 14%;">Quantity</th>
+                  <th style="width: 10%;"> Value </th>
+                  <th style="width: 13%;"> Couriered Status </th>
+                  <th style="width: 12%;"> Status </th>
+                  <th style="width: 8%;" *ngIf="!disableField"> </th>
+                </tr>
+              </thead>
+              <tr *ngFor="let row of poForm.materialsList; let i= index">
+                <td>
+                  <ng-container *ngIf="row.new && !disableField">
+                    <div *ngIf="row.materialName != 'others'">
+                      <ng-select placeholder="Select material" [items]="materialsItems" [clearable]="false"
+                        [multiple]="false" bindLabel="name" bindValue="id" [(ngModel)]="row.materialName"
+                        (ngModelChange)="selectMaterial(row, i)" appendTo="body" class="form-group-table-material"
+                        [disabled]="disableField" [virtualScroll]="true">
+                      </ng-select>
+                    </div>
+                    <div *ngIf="row.materialName == 'others'">
+                      <input type="text" class="form-group-table form-control" [(ngModel)]="row.newMaterialName"
+                        [disabled]="disableField" />
+                    </div>
+                  </ng-container>
+                  <div *ngIf="disableField">
+                      {{(row.materialName != 'others'? row.materialName : row.newMaterialName)}}
+                  </div>
+                </td>
+                <td>
+                  {{ row.stock || '-' }}
+                </td>
+                <td>
+                  <div *ngIf="row.new">
+                    <input type="number" class="form-group-table form-control" [(ngModel)]="row.quantity"
+                      [disabled]="true" />
+                  </div>
+                </td>
+                <td>
+                  <div *ngIf="row.new">
+                    <input type="number" class="form-group-table form-control" [(ngModel)]="row.suppliedQuantity"
+                      [disabled]="true" />
+                  </div>
+                </td>
+                <td>
+                  <div *ngIf="row.new">
+                    <input type="text" class="form-group-table form-control" [(ngModel)]="row.deviceId"
+                      [disabled]="disableField" />
+                  </div>
+                </td>
+                <td>
+                  <div *ngIf="row.new">
+                    <input type="number" class="form-group-table form-control" [(ngModel)]="row.qty"
+                      [disabled]="disableField" />
+                  </div>
+                </td>
+                <td>
+                  <div *ngIf="row.new">
+                    <input type="number" class="form-group-table form-control" [(ngModel)]="row.value"
+                      [disabled]="disableField" (ngModelChange)="changeValues($event, row)" />
+                  </div>
+                </td>
+                <td>
+                  <div *ngIf="row.new">
+                    <ng-select placeholder="Select Couriered Status" [items]="courieredStatusList" [clearable]="false"
+                      [multiple]="false" bindLabel="label" bindValue="value" [(ngModel)]="row.courieredStatus"
+                      appendTo="body" class="form-group-table-material" [disabled]="disableField">
+                    </ng-select>
+                  </div>
+                </td>
+                <td>
+                  <div *ngIf="row.new">
+                    <ng-select placeholder="Select Material Status" [items]="materialStatusList" [clearable]="false"
+                      [multiple]="false" bindLabel="label" bindValue="value" [(ngModel)]="row.status" appendTo="body"
+                      class="form-group-table-material" [disabled]="disableField">
+                    </ng-select>
+                  </div>
+                </td>
+                <td *ngIf="!disableField">
+                  <span class="display-inline-table " (click)="editMaterialRow(row)">
+                    <i class="fa fa-pen action-icon" aria-hidden="true"></i>
+                  </span>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col-md-12 text-left">
+          <label>
+            <h6>Company Details</h6>
+          </label>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group" *ngIf="companyList">
+            <label>Select Company<span class="mandatory">*</span></label>
+            <ng-select placeholder="Select Status" [items]="companyList"
+              [(ngModel)]="deliveryChallanDetails.companyName" (ngModelChange)="changeCompany($event)"
+              [clearable]="false" [multiple]="false" bindLabel="label" bindValue="value" appendTo="body"
+              class="form-group-table-material" [disabled]="disableinputField">
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Company Address<span class="mandatory">*</span></label>
+            <textarea class="form-control" rows="4" [(ngModel)]="companyDetails.companyAddress" name="Declaration"
+              [disabled]="true"></textarea>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Phone Number<span class="mandatory">*</span></label>
+            <input type="number" class="form-control" [(ngModel)]="companyDetails.contactNo" name="Comapny Phone Num"
+              placeholder="Enter Company Phone Number" [disabled]="true">
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Email<span class="mandatory">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="companyDetails.email" name="Total Value"
+              placeholder="Enter Total Value" [disabled]="true" />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Location<span class="mandatory">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="companyDetails.location" name="Total Value"
+              placeholder="Enter Total Value" [disabled]="true" />
+          </div>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col-md-12 text-left">
+          <label>
+            <h6>Registration Details</h6>
+          </label>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Company GST NO<span class="mandatory">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="companyDetails.companyGstNo" name="GST NO"
+              placeholder="Enter GST Number" [disabled]="true" />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Company PAN NO<span class="mandatory">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="companyDetails.companyPanNo" name="Total Value"
+              placeholder="Enter Total Value" [disabled]="true" />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Total Value<span class="mandatory">*</span></label>
+            <input type="number" class="form-control" [(ngModel)]="deliveryChallanDetails.totalValue" [min]="0"
+              name="Total Value" placeholder="Enter Total Value" [disabled]="true" />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Declaration<span class="mandatory">*</span></label>
+            <textarea class="form-control" rows="3" [(ngModel)]="deliveryChallanDetails.decleration" [disabled]="true"
+              name="Declaration"></textarea>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Terms & Conditions:<span class="mandatory">*</span></label>
+            <textarea class="form-control" rows="4" [(ngModel)]="companyDetails.termsandCond"
+              placeholder="Terms and Conditions" name="Terms And Conditions" [disabled]="true"></textarea>
+          </div>
+        </div>
+        <div class="col-md-4" *ngIf="challanId && userRole === 'manager'">
+          <div class="form-group">
+            <label>DC Status:<span class="mandatory">*</span></label>
+            <ng-select placeholder="Select Status" [items]="DCStatusList" [(ngModel)]="deliveryChallanDetails.dcStatus"
+              (ngModelChange)="changeDcStatus($event)" [clearable]="false" [multiple]="false" bindLabel="label"
+              bindValue="value" appendTo="body" [disabled]="dcStatus === 'Approved'" class="form-group-table-material">
+            </ng-select>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="col-md-12 mt-3 p-0">
+    <button class="btn btn-secondary" (click)="navigateToList()">Cancel</button>
+    <button *ngIf="dcStatus === 'Active'" class="btn btn-primary ml-3" (click)="addDeliveryChallan()"
+      [disabled]="validate()">Save</button>
+  </div>
+
+</div>

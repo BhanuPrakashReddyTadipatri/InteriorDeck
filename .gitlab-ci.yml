@@ -1,0 +1,23 @@
+before_script:
+    - val=`echo $(mysql -h $MYSQL_HOST -u $MYSQL_USER -p$MYSQL_PASS -e "SELECT COUNT(*) FROM $VERSION_DB.$DB_TABLE WHERE category='Server' AND type='UI' AND os='redhat' AND module_name='$CI_PROJECT_NAME' ") | cut -d " " -f2`
+    - if [ $val == 0 ]; then mysql -h $MYSQL_HOST -u $MYSQL_USER -p$MYSQL_PASS -e "INSERT INTO $VERSION_DB.$DB_TABLE values('Server','UI','$CI_PROJECT_NAME','redhat', '2', '0', '0')";fi
+    - DEV=$(mysql -h $MYSQL_HOST -u $MYSQL_USER -p$MYSQL_PASS -N -e "SELECT dev FROM $VERSION_DB.$DB_TABLE where module_name = '$CI_PROJECT_NAME' AND type = 'UI' AND category = 'Server' AND os = 'redhat'")
+    - PROD=$(mysql -h $MYSQL_HOST -u $MYSQL_USER -p$MYSQL_PASS -N -e "SELECT prod FROM $VERSION_DB.$DB_TABLE where module_name = '$CI_PROJECT_NAME' AND type = 'UI' AND category = 'Server' AND os = 'redhat'")
+
+build-master:
+  stage: build
+  image: ailens-registry.knowledgelens.com:9084/repository/kl-docker-repo/kl-it-operations/gitlab-runner/ubuntu-mysql:node13.12.0
+  script:
+  - DEV=`expr $DEV + 1`
+  - npm install
+  - ng build --prod
+  - cd dist/
+  - tar czvf $CI_PROJECT_NAME.tar.gz site-planner/*
+  - curl -u"$ARTIFACTORY_USER:$ARTIFACTORY_PASS" -T $CI_PROJECT_NAME.tar.gz $ARTIFACTORY_URL/$SUB_GROUP/$CI_PROJECT_NAME/x64/rhel/"$PROD.$DEV"/$CI_PROJECT_NAME.tar.gz
+  - mysql -h $MYSQL_HOST -u $MYSQL_USER -p$MYSQL_PASS -e "INSERT INTO $HISTORY_DB.$DB_TABLE values('$CI_JOB_ID','Server','UI', '$CI_PROJECT_NAME','redhat', '$PROD.$DEV', '$CI_COMMIT_SHA', '$GITLAB_USER_NAME', '$CI_COMMIT_REF_NAME')"
+  - mysql -h $MYSQL_HOST -u $MYSQL_USER -p$MYSQL_PASS -e "UPDATE $VERSION_DB.$DB_TABLE SET prod='$PROD' , dev='$DEV' WHERE module_name = '$CI_PROJECT_NAME' AND type = 'UI' AND category = 'Server' AND os = 'redhat'"
+  
+  only:
+  - master
+  tags:
+  - docker

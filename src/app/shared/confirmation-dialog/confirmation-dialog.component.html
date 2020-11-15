@@ -1,0 +1,14 @@
+<ng-template #confirmPopup let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">{{title}}</h5>
+    </div>
+    <div class="modal-body">
+      {{message}} <b>{{ messageContent }}</b>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="d('Cross click')">{{falseButton}}</button>
+      <button type="button" class="btn btn-primary" (click)="okClicked();d('Cross click')">{{trueButton}}</button>
+    </div>
+  </div>
+</ng-template>

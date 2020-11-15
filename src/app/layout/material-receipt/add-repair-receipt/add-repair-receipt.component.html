@@ -1,0 +1,206 @@
+<div class="col-md-12 page-heading">
+  <h5>{{receiptId ? 'Update Repair Receipt' : 'Add New Repair Receipt' }}</h5>
+</div>
+
+<div class="page-inner">
+  <form name="form" (ngSubmit)="f1.form.valid && confirmation()" #f1="ngForm" autocomplete="off">
+    <div class="row m-0 receipt-height">
+      <div class="col-md-12 m-b-4 form-height">
+        <div class="form-group card-form-height px-0">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Client Name <span class="mandatory">*</span></label>
+                <ng-select placeholder="Select Client" [items]="clientList" bindLabel="siteName" bindValue="siteId"
+                  [clearable]="false" class="select-control" [(ngModel)]="repairReceiptDetails.clientId"
+                  name="clientName" required #clientName="ngModel" [disabled]="receiptViewMode || receiptId"
+                  (ngModelChange)="changeClientName($event);"
+                  [ngClass]="{'is-invalid': clientName.invalid && clientName.touched}" [virtualScroll]="true">
+                </ng-select>
+                <div *ngIf="clientName.invalid && clientName.touched" class="invalid-feedback">
+                  <div>Client Name is required</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="weight-bold">Name</label>
+              <input placeholder="Enter Name" class="form-control" [(ngModel)]="repairReceiptDetails.name"
+                name="nameField" type="text" [disabled]="receiptViewMode || receiptId" />
+            </div>
+            <div class="col-md-4">
+              <label class="weight-bold">Contact Number</label>
+              <input placeholder="Enter Contact Number" class="form-control"
+                [(ngModel)]="repairReceiptDetails.contactNumber" name="contactNumber" #contactNumber="ngModel"
+                type="number" pattern=".{10,15}"
+                [ngClass]="{'is-invalid': contactNumber.invalid && contactNumber.touched}"
+                [disabled]="receiptViewMode || receiptId" />
+              <div *ngIf="contactNumber.invalid && contactNumber.touched" class="invalid-feedback">
+                <!-- <div *ngIf="email.errors.required">Contact Number is required (minimum 10 digits, maximum 15 digits)</div> -->
+                <div>Please enter a contact number having minimum 10 digits and maximum 15 digits</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="weight-bold">E-Mail ID</label>
+              <input placeholder="Enter E-Mail ID" class="form-control" [(ngModel)]="repairReceiptDetails.email"
+                name="email" #email="ngModel" type="text" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                [ngClass]="{'is-invalid': email.invalid && email.touched}" [disabled]="receiptViewMode || receiptId" />
+              <div *ngIf="email.invalid && email.touched" class="invalid-feedback">
+                <!-- <div *ngIf="email.errors.required">E-Mail ID is required</div> -->
+                <div *ngIf="email.errors.pattern">Please Enter Valid E-Mail ID</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="weight-bold">Address </label>
+              <textarea type="text" rows="4" class="form-control" [(ngModel)]="repairReceiptDetails.address"
+                placeholder="Enter Address" [disabled]="receiptViewMode || receiptId" name="address"></textarea>
+            </div>
+          </div>
+
+          <div class="row m-0 p-b-10" *ngIf="productList.length > 0">
+            <div class="col-md-8 pl-0">
+              <label class="weight-bold">Product List</label>
+              <div style="margin-top: 15px">
+                <div>
+                  <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-material">
+                      <thead>
+                        <tr>
+                          <th style="width: 35%">Product Name<span class="mandatory">*</span></th>
+                          <th style="width: 15%">Product Code</th>
+                          <th style="width: 15%">Received Qty<span class="mandatory">*</span></th>
+                          <th style="width: 15%">Device ID</th>
+                          <th style="width: 10%" *ngIf="!receiptViewMode && !receiptId"></th>
+                        </tr>
+                      </thead>
+                      <ng-container *ngFor=" let row of productList;let i = index">
+                        <tr>
+                          <td>
+                            <ng-container *ngIf="(receiptViewMode || receiptId) then NonEditBlock else EditBlock">
+                            </ng-container>
+                            <ng-template #NonEditBlock>
+                              <div>{{row.materialCode}} - {{row.materialName}}</div>
+                            </ng-template>
+                            <ng-template #EditBlock>
+                              <ng-select placeholder="Select Product" [items]="selectProduct" [clearable]="false"
+                                bindValue="materialCode" bindLabel="name" [(ngModel)]="row.materialCode"
+                                [virtualScroll]="true" [disabled]="receiptViewMode || receiptId" appendTo="body"
+                                (ngModelChange)="changeMaterialName($event, row);" name="{{row.materialName}}"
+                                [ngModelOptions]="{standalone: true}" required>
+                              </ng-select>
+                            </ng-template>
+                          </td>
+                          <td>
+                            <label for=""> {{row.materialCode}} </label>
+                          </td>
+                          <td>
+                            <input type="number" class="form-group-table form-control" [(ngModel)]="row.quantity"
+                              [ngModelOptions]="{standalone: true}" name="prodQuantity"
+                              [disabled]="receiptViewMode || receiptId" required />
+                          </td>
+                          <td>
+                            <input type="text" class="form-group-table form-control" [(ngModel)]="row.deviceId"
+                              [ngModelOptions]="{standalone: true}" #productPrice="ngModel"
+                              [disabled]="receiptViewMode || receiptId" name="deviceId" required />
+                          </td>
+                          <td *ngIf="!receiptViewMode && !receiptId">
+                            <span class="display-inline-table" (click)="deleteRepairRow(i)"
+                              *ngIf="productList.length > 1">
+                              <i class="far fa-trash-alt action-icon" aria-hidden="true"></i>
+                            </span>
+                            <span class="display-inline-table" *ngIf="i == 0" (click)="addRepairRow()">
+                              <i class="fas fa-plus-circle action-icon" aria-hidden="true"></i>
+                            </span>
+                          </td>
+                        </tr>
+                      </ng-container>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row pb-2">
+            <div class="col-md-4">
+              <label class="weight-bold">Reason for repair <span class="mandatory">*</span></label>
+              <textarea type="text" rows="4" class="form-control" [(ngModel)]="repairReceiptDetails.reasonForRepair"
+                required #reasonForRepair="ngModel"
+                [ngClass]="{'is-invalid': reasonForRepair.invalid && reasonForRepair.touched}"
+                placeholder="Enter Reason for repair" [disabled]="receiptViewMode || receiptId"
+                name="reasonForRepair"></textarea>
+              <div *ngIf="reasonForRepair.invalid && reasonForRepair.touched && reasonForRepair.errors.required"
+                class="invalid-feedback">
+                <div>Reason for repair is required</div>
+              </div>
+            </div>
+            <div class="col-md-4"
+              *ngIf="repairReceiptDetails.status !== 'pending' && repairReceiptDetails.status !== 'inProgress'">
+              <label class="weight-bold">Remarks <span class="mandatory">*</span></label>
+              <textarea type="text" rows="4" class="form-control" [(ngModel)]="repairReceiptDetails.remarks" required
+                #remarks="ngModel" [ngClass]="{'is-invalid': remarks.invalid && remarks.touched}"
+                placeholder="Enter Remarks" [disabled]="receiptViewMode" name="remarks"></textarea>
+              <div *ngIf="remarks.invalid && remarks.touched && remarks.errors.required" class="invalid-feedback">
+                <div>Remarks is required</div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Status <span class="mandatory">*</span></label>
+                <ng-select placeholder="Select Status" [items]="statusList" bindLabel="label" bindValue="value"
+                  [clearable]="false" class="select-control" [(ngModel)]="repairReceiptDetails.status" name="status"
+                  required #status="ngModel" [disabled]="receiptViewMode || !receiptId" appendTo="body"
+                  (ngModelChange)="fetchChallanList();" [ngClass]="{'is-invalid': status.invalid && status.touched}">
+                </ng-select>
+                <div *ngIf="status.invalid && status.touched" class="invalid-feedback">
+                  <div>Status is required</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4" *ngIf="repairReceiptDetails.status !== 'pending'">
+              <div class="form-group">
+                <label>Technician <span class="mandatory">*</span></label>
+                <ng-select placeholder="Select User" [items]="userList" bindLabel="firstName" bindValue="userID"
+                  [clearable]="false" class="select-control" [(ngModel)]="repairReceiptDetails.assignedTo"
+                  name="assignedTo" [disabled]="receiptViewMode" appendTo="body" required #assignedTo="ngModel"
+                  [virtualScroll]="true" [ngClass]="{'is-invalid': assignedTo.invalid && assignedTo.touched}">
+                </ng-select>
+                <div *ngIf="assignedTo.invalid && assignedTo.touched" class="invalid-feedback">
+                  <div>Technician is required</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4" *ngIf="repairReceiptDetails.status === 'returned'">
+              <div class="form-group">
+                <label>Associated Challan <span class="mandatory">*</span></label>
+                <ng-select placeholder="Select Challan" [items]="challanList" bindLabel="challanNo"
+                  bindValue="deliveryChallanId" [clearable]="false" class="select-control"
+                  [(ngModel)]="repairReceiptDetails.associatedChallan" name="associatedChallan"
+                  [disabled]="receiptViewMode" appendTo="body" required #associatedChallan="ngModel"
+                  [virtualScroll]="true"
+                  [ngClass]="{'is-invalid': associatedChallan.invalid && associatedChallan.touched}">
+                </ng-select>
+                <label for="" class="indication">Showing approved challans.</label>
+                <div *ngIf="associatedChallan.invalid && associatedChallan.touched" class="invalid-feedback">
+                  <div>Associated Challan is required</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 mt-1 p-0 bottom-btn">
+        <button class="btn btn-secondary ml-2" (click)="goBack()">
+          {{ "Cancel" }}
+        </button>
+        <button class="btn btn-primary ml-2" *ngIf="!receiptViewMode" [disabled]="!f1.valid">
+          Submit
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- Confirmation Popup -->
+<app-confirmation-dialog *ngIf="showConfirmation" [confirmJson]="confirmJson"
+  (actionPerformed)="actionPerformed($event)"> </app-confirmation-dialog>

@@ -1,0 +1,35 @@
+{
+  "status": true,
+  "message": "Vendor Master fetched successfully",
+  "data": {
+    "bodyContent": {
+      "vendorType": {
+
+        "value": "Site Issues",
+        "name": "Site Issues"
+      },
+
+      "contactPerson": "media",
+      "address": " No 6/1 , 1st Floor Sri Jothi Complex, Murugesan Street, Balavinayagar Nagar, Arumbakkam, Chennai, 600 106, Tamil Nadu 600106",
+      "contactNo": 9986385000,
+      "location": "Chennai",
+      "email": "smita@knowledgelens.com",
+      "ProductList": [{
+        "productCode": {
+          "name": "product 1",
+          "value": "product 1"
+        },
+        "productName": "product1",
+        "quantity": 360,
+        "price": 1000,
+        "new": true
+      }],
+      "productDate": "2020-03-02T18:30:00.000Z"
+
+    },
+    "type": "edit",
+    "lastUpdatedTime": "09-02-2020 07:58:30",
+    "lastUpdatedBy": "amal",
+    "companyId": "1111"
+  }
+}

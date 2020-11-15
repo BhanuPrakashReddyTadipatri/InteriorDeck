@@ -1,0 +1,49 @@
+<div class="col-md-12 row page-heading">
+  <div class="col-md-3 p-0 challan-heading">
+    <h5>Receipts</h5>
+  </div>
+  <div class="col-md-8">
+    <div class="btn-group" role="group" aria-label="btn-heading">
+      <button [ngClass]="activeTab === 'materialReceipt' ? 'btn btn-md btn-primary' : 'btn btn-md btn-secondary'"
+        (click)="changeMainTab('materialReceipt')">Material Receipts</button>
+      <button [ngClass]="activeTab === 'repairReceipt' ? 'btn btn-md btn-primary' : 'btn btn-md btn-secondary'"
+        (click)="changeMainTab('repairReceipt')">Repair Receipts</button>
+    </div>
+  </div>
+</div>
+
+<div class="page-inner">
+  <div class="col-md-12 p-0 pb-3" *ngIf="activeTab === 'materialReceipt'">
+    <ul class="nav" id="innerTab" role="tablist">
+      <li class="nav-item inner-info-tab cursor-pointer" (click)="changeTab('active');"
+        [ngClass]="{'active': mrStatus === 'active'}">
+        <a class="nav-link">Active</a>
+      </li>
+      <li class="nav-item inner-info-tab cursor-pointer" (click)="changeTab('approved');"
+        [ngClass]="{'active': mrStatus === 'approved'}">
+        <a class="nav-link ">Approved</a>
+      </li>
+    </ul>
+  </div>
+  <div class="col-md-12 p-0 pb-3" *ngIf="activeTab === 'repairReceipt'">
+    <ul class="nav" id="innerTabRepair" role="tablist">
+      <li class="nav-item inner-info-tab cursor-pointer" (click)="changeTab(item['key']);"
+        *ngFor="let item of statusList; let i = index;"
+        [ngClass]="{'active': status === item['key']}">
+        <a class="nav-link"> {{item['label']}} </a>
+      </li>
+    </ul>
+    <!-- <div class="form-group">
+      <label class="weight-bold">Status</label>
+      <ng-select placeholder="Select Status..." [items]="statusList" [clearable]="false" bindLabel="label" bindValue="key" [multiple]="false"
+      class="list-form" [(ngModel)]="status" (ngModelChange)="fetchRepairReceiptList();">
+      </ng-select>
+    </div> -->
+  </div>
+  <app-simple-table-with-pagination *ngIf="materialReceiptTable?.tableData?.headerContent?.length > 0"
+    (actionEmitter)="handleTableEmitter($event);" [tableDataWithActions]="materialReceiptTable"
+    [tableReloadEvent]="materialReceiptSubject.asObservable()"></app-simple-table-with-pagination>
+</div>
+
+<app-confirmation-dialog *ngIf="showConfirmation" [confirmJson]="confirmJson"
+  (actionPerformed)="actionPerformed($event)"> </app-confirmation-dialog>

@@ -1,0 +1,73 @@
+.active{
+    background-color: rgba(255,255,255,0.2);
+  }
+  .menu-tooltip .tooltip-inner {
+    background-color: #002C4E;
+    width: 0.4rem !important;
+    height: auto !important;
+    font-size: 100% !important;
+    padding: 5px 10px 5px 10px !important;
+  }
+  .menu-tooltip .arrow::before {
+    border-top-color: #002C4E;
+  }
+  .icon-stack {
+    position: relative;
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    line-height: 3em;
+  }
+  .icon-stack-1x,
+  .icon-stack-2x,
+  .icon-stack-3x {
+    position: absolute;
+    left: 0;
+    width: 100%;
+  }
+  .icon-stack-1x {
+    line-height: inherit;
+    top: -22px;
+    font-size: 0.5em;
+  }
+  .icon-stack-2x {
+    font-size: 1.5em;
+  }
+  .icon-stack-3x {
+    font-size: 1.3em;
+  }
+  .menus-list {
+    min-height: 90%;
+    overflow-y: auto;
+    max-height: 90%;
+    overflow-x: hidden;
+  }
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .menus-list::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE and Edge */
+  .menus-list {
+    -ms-overflow-style: none;
+    overflow: -moz-scrollbars-none;
+  }
+  .indication {
+    font-size: 0.7rem;
+    font-style: initial;
+  }
+  .side-menu {
+    line-height: 0.5rem !important;
+    img {
+      width: 45%;
+    }
+  }
+  .sidebar-icon {
+    height: 36px;
+    width: 40px;
+    display: block;
+    margin: 0% 28%;
+    svg {
+      fill: #fff;
+    }
+  }

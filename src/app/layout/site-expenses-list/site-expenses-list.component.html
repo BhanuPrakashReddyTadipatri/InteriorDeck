@@ -1,0 +1,71 @@
+<div class="page-inner">
+  <div class="row">
+    <div class="col-sm-12">
+      <button class="btn btn-primary m-10 right-align" (click)="navigateToPage()" *ngIf="userRole === 'siteEngineer'">
+        New Site Expense <i class="fas fa-arrow-circle-add"></i></button>
+    </div>
+  </div>
+  <div class="header-nav-nav">
+    <ul class="nav nav-tabs" role="tablist">
+      <li *ngFor="let item of tabList" class="nav-item" (click)="changeTab(item.value)">
+        <a class="nav-link nav-link-size" [ngClass]="{'active': item.value === ticketStatus.ticketStatus}" role="tab"><i
+            class="{{item.icon}} m-r-5"></i>{{item.label}} <label *ngIf="getCount(item.value)>0"
+            class="new-ticket">{{getCount(item.value)}}&nbsp;new</label>
+          <label *ngIf="getCount(item.value)===0"
+            class="transparent new-ticket">{{getCount(item.value)}}&nbsp;new</label> </a>
+      </li>
+    </ul>
+  </div>
+  <ng-container>
+    <div *ngIf="ticketList">
+      <div *ngIf="ticketList.bodyContent" style="max-height: calc(100vh - 200px);overflow-y: auto;">
+        <div>
+          <input type="text" class="table-search" [(ngModel)]="filterTickets" placeholder="Search..." />
+        </div>
+        <table class="table row-border hover table-hover" style="width:100%;">
+          <thead>
+            <tr>
+              <ng-container *ngFor="let headerSubscript of ticketList.headerContent;">
+                <th *ngIf="headerSubscript.key!='read_status'">
+                  <span>{{ headerSubscript.label }}</span>
+                </th>
+              </ng-container>
+              <th *ngIf="checkEditAvailability()">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let bodySubscript of ticketList.bodyContent | searchFilter: searchKeys : filterTickets; let i=index;"
+              style="cursor:pointer;" (click)="navigateToTicket(bodySubscript)"
+              [ngStyle]="{'background-color': bodySubscript.read_status === false? 'white':'#fff' }">
+              <ng-container *ngFor="let headerSubscript of ticketList.headerContent">
+                <td *ngIf="headerSubscript.key!='read_status'">
+                  <span>
+                    {{ headerSubscript.key==='createTime'? (bodySubscript[headerSubscript.key] | amFromUtc | amLocal | amDateFormat:'MMMM Do YYYY, h:mm a'):bodySubscript[headerSubscript.key]}}
+                  </span>
+                </td>
+              </ng-container>
+              <td *ngIf="checkEditAvailability()">
+                <button class="btn btn-sm btn-primary"
+                  (click)="editSiteVisit(bodySubscript);$event.stopPropagation();$event.stopPropagation()"><i
+                    class="fa fa-pencil-alt"></i></button>
+                <button class="btn btn-sm btn-primary"
+                  (click)="deleteTicketConfirmation(bodySubscript);$event.stopPropagation()"><i
+                    class="fa fa-trash-alt"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngIf="ticketList.bodyContent.length == 0">
+          <p style="text-align: center;margin: 10px">No records found.</p>
+        </div>
+      </div>
+      <p *ngIf="ticketList.bodyContent" style="margin: 10px 0px 0px;">Showing
+        <b>{{ ticketList.bodyContent.length }}</b> records</p>
+    </div>
+  </ng-container>
+</div>
+
+<!-- Confirmation Popup -->
+<app-confirmation-dialog *ngIf="showConfirmation" [confirmJson]="confirmJson"
+  (actionPerformed)="actionPerformed($event)"> </app-confirmation-dialog>

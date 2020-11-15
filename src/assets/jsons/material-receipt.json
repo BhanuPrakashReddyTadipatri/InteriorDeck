@@ -1,0 +1,98 @@
+{
+    "status": true,
+    "message": "Success",
+    "data": {
+      "tableData": {
+        "headerContent": [
+            {
+                "key": "vendorName",
+                "label": "Vendor Name"
+              },
+              {
+                "key": "location",
+                "label": "location"
+              },
+              {
+                "key": "productCode",
+                "label": "Product Code"
+              },
+              {
+                "key": "productName",
+                "label": "Product Name"
+              },
+              {
+                "key": "Quantity",
+                "label": "Quantity"
+              },
+              {
+                "key": "price",
+                "label": "Price"
+              },
+              {
+                "key": "purchaseDate",
+                "label": "Purchase Date"
+              },
+              {
+                "key": "updatedBy",
+                "label": "Updated By"
+              },
+              {
+                "key": "updatedOn",
+                "label": "Updated On"
+              }
+        ],
+        "bodyContent": [
+          {
+            "receiptId": "1234",
+            "vendorName":"Vendor 1",
+            "location" : "Bangalore",
+            "productCode": "KL/DC/2019/21",
+            "productName": "iLens Relay",
+            "Quantity" : "5 items",
+            "price": 610,
+            "purchaseDate": "19-05-2020",
+            "updatedBy": "Mohan",
+            "updatedOn": "19-05-2020"
+          },
+          {
+            "receiptId": "1234",
+            "vendorName":"Vendor 1",
+            "location" : "Bangalore",
+            "productCode": "KL/DC/2019/21",
+            "productName": "iLens Relay",
+            "Quantity" : "5 items",
+            "price": 610,
+            "purchaseDate": "19-05-2020",
+            "updatedBy": "Mohan",
+            "updatedOn": "19-05-2020"
+          },
+          {
+            "receiptId": "1234",
+            "vendorName":"Vendor 1",
+            "location" : "Bangalore",
+            "productCode": "KL/DC/2019/21",
+            "productName": "iLens Relay",
+            "Quantity" : "5 items",
+            "price": 610,
+            "purchaseDate": "19-05-2020",
+            "updatedBy": "Mohan",
+            "updatedOn": "19-05-2020"
+          },
+          {
+            "receiptId": "1234",
+            "vendorName":"Vendor 1",
+            "location" : "Bangalore",
+            "productCode": "KL/DC/2019/21",
+            "productName": "iLens Relay",
+            "Quantity" : "5 items",
+            "price": 610,
+            "purchaseDate": "19-05-2020",
+            "updatedBy": "Mohan",
+            "updatedOn": "19-05-2020"
+          }
+        ]
+      }
+    }
+  }
+
+

@@ -1,0 +1,25 @@
+<div class="col-md-12 row page-heading">
+  <div class="col-md-3 p-0 po-heading">
+    <h5>Purchase Orders</h5>
+  </div>
+  <div class="col-md-6">
+    <div class="btn-group" role="group" aria-label="btn-heading">
+      <button [ngClass]="poStatus === 'Active' ? 'btn btn-md btn-primary' : 'btn btn-md btn-secondary'"
+        (click)="changeTab('Active')">Active</button>
+      <button [ngClass]="poStatus === 'Completed' ? 'btn btn-md btn-primary' : 'btn btn-md btn-secondary'"
+        (click)="changeTab('Completed')">Completed</button>
+    </div>
+  </div>
+</div>
+
+<div class="page-inner">
+  
+  <app-simple-table-with-pagination *ngIf="poListTable?.tableData?.headerContent?.length > 0"
+    (actionEmitter)="handleTableEmitter($event);" [tableDataWithActions]="poListTable"
+    [tableReloadEvent]="tableReloadSubject.asObservable()">
+  </app-simple-table-with-pagination>
+
+</div>
+
+<app-confirmation-dialog *ngIf="showConfirmation" [confirmJson]="confirmJson"
+  (actionPerformed)="actionPerformed($event)"> </app-confirmation-dialog>

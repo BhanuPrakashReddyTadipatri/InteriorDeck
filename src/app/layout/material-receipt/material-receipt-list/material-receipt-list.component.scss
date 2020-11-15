@@ -1,0 +1,14 @@
+#innerTab, #innerTabRepair {
+    .active {
+        border-bottom: 3px solid #4265dc !important;
+        font-weight: bold;
+  }
+  .inner-info-tab {
+        font-family: "roboto-medium", Sans-serif;
+        border-bottom: 3px solid #e0e0e0;
+  }
+  .inner-info-tab:hover {
+        // border-bottom: 3px solid lightgray;
+        color: #2865dc;
+  }
+}

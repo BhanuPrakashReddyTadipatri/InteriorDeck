@@ -1,0 +1,168 @@
+{
+    "status": true,
+    "manager": [{
+            "label": "Tickets",
+            "icon": "icon-icons8-web-100",
+            "key": "ticketList",
+            "tooltip": "Ticket List",
+            "route": "/ticket-list",
+            "display": true
+        },
+        {
+            "label": "Site Visit",
+            "icon": "icon-icons8-web-100",
+            "key": "siteVisit",
+            "tooltip": "Site Visit",
+            "route": "/schedule-site-visit",
+            "display": true
+        },
+        {
+            "label": "Orders",
+            "icon": "icon-icons8-web-100",
+            "key": "purchaseOrders",
+            "tooltip": "Purchase Orders",
+            "route": "/purchase-orders-list",
+            "display": true
+        },
+        {
+            "label": "Challans",
+            "icon": "icon-icons8-web-100",
+            "key": "deliveryChallan",
+            "tooltip": "Delivery Challan",
+            "route": "/delivery-Challan",
+            "display": true
+        },
+        {
+            "label": "Products",
+            "icon": "icon-icons8-web-100",
+            "key": "products",
+            "tooltip": "Products",
+            "route": "/products",
+            "display": true
+        },
+        {
+            "label": "Inventory",
+            "icon": "icon-icons8-web-100",
+            "key": "materials",
+            "tooltip": "Inventory",
+            "route": "/materials-management",
+            "display": true
+        },
+        {
+            "label": "Receipts",
+            "icon": "icon-icons8-web-100",
+            "key": "receipts",
+            "tooltip": "Receipts",
+            "route": "/receipts",
+            "display": true
+        }
+    ],
+    "siteEngineer": [{
+            "label": "Home",
+            "icon": "icon-icons8-web-100",
+            "key": "home",
+            "tooltip": "Home",
+            "route": "/home",
+            "display": true
+        },
+        {
+            "label": "Tickets",
+            "icon": "icon-icons8-web-100",
+            "key": "ticketList",
+            "tooltip": "Ticket List",
+            "route": "/ticket-list",
+            "display": true
+        }
+    ],
+    "sales": [{
+            "label": "Home",
+            "icon": "icon-icons8-web-100",
+            "key": "home",
+            "tooltip": "Home",
+            "route": "/home",
+            "display": true
+        },
+        {
+            "label": "Site Visit",
+            "icon": "icon-icons8-web-100",
+            "key": "siteVisit",
+            "tooltip": "Site Visit",
+            "route": "/schedule-site-visit",
+            "display": true
+        },
+        {
+            "label": "Tickets",
+            "icon": "icon-icons8-web-100",
+            "key": "ticketList",
+            "tooltip": "Ticket List",
+            "route": "/ticket-list",
+            "display": true
+        }
+    ],
+    "accounts": [{
+            "label": "Home",
+            "icon": "icon-icons8-web-100",
+            "key": "home",
+            "tooltip": "Home",
+            "route": "/home",
+            "display": true
+        },
+        {
+            "label": "Site Visit",
+            "icon": "icon-icons8-web-100",
+            "key": "siteVisit",
+            "tooltip": "Site Visit",
+            "route": "/schedule-site-visit",
+            "display": true
+        },
+        {
+            "label": "Orders",
+            "icon": "icon-icons8-web-100",
+            "key": "purchaseOrders",
+            "tooltip": "Purchase Orders",
+            "route": "/purchase-orders-list",
+            "display": true
+        },
+        {
+            "label": "Challans",
+            "icon": "icon-icons8-web-100",
+            "key": "deliveryChallan",
+            "tooltip": "Delivery Challan",
+            "route": "/delivery-Challan",
+            "display": true
+        },
+        {
+            "label": "Materials",
+            "icon": "icon-icons8-web-100",
+            "key": "materials",
+            "tooltip": "Materials",
+            "route": "/materials-management",
+            "display": true
+        }
+    ],
+    "innovationLabUser": [{
+            "label": "Home",
+            "icon": "icon-icons8-web-100",
+            "key": "home",
+            "tooltip": "Home",
+            "route": "/home",
+            "display": true
+        },
+        {
+            "label": "Materials",
+            "icon": "icon-icons8-web-100",
+            "key": "materials",
+            "tooltip": "Materials",
+            "route": "/materials-management",
+            "display": true
+        }
+    ],
+    "offshoreSupportEngineer": [{
+        "label": "Home",
+        "icon": "icon-icons8-web-100",
+        "key": "home",
+        "tooltip": "Home",
+        "route": "/home",
+        "display": true
+    }]
+}

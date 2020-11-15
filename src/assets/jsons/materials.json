@@ -1,0 +1,44 @@
+{
+  "status": true,
+  "data": {
+    "tableData": {
+      "headerContent": [
+        {
+          "key": "materialName",
+          "label": "Material Name"
+        },
+        {
+          "key": "quantity",
+          "label": "Quantity"
+        },
+        {
+          "key": "deviceId",
+          "label": "Device ID"
+        },
+        {
+          "key": "status",
+          "label": "Status"
+        },
+        {
+          "key": "lastUpdatedBy",
+          "label": "Last Updated By"
+        },
+        {
+          "key": "lastUpdatedTime",
+          "label": "Last Updated Time"
+        }
+      ],
+      "bodyContent": [
+        {
+          "id": "",
+          "materialName": "GLens Data Logger",
+          "quantity": "5",
+          "deviceId": "F765A",
+          "status": "Submitted",
+          "lastUpdatedBy": "Amal",
+          "lastUpdatedTime": "19-Feb-2020 13:10:00"
+        }
+      ]
+    }
+  }
+}

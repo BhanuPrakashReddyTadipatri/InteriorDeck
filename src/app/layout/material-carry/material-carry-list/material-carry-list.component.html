@@ -1,0 +1,23 @@
+<div class="page-inner">
+  <div class="table-responsive">
+    <table datatable *ngIf="userList" class="table row-border hover table-striped table-hover" style="width:100%;">
+      <thead>
+        <tr>
+          <th *ngFor="let headerSubscript of userList.headerContent;">{{ headerSubscript.label }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let bodySubscript of userList.bodyContent;" style="cursor:pointer;" class="btn-hide"
+          (click)="navigateToUserDetails(bodySubscript)">
+          <td *ngFor="let headerSubscript of userList.headerContent">
+            <span>{{bodySubscript[headerSubscript.key]}}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="userList.bodyContent.length === 0">
+      <p style="text-align: center;margin: 10px">No records found.</p>
+    </div>
+  </div>
+</div>

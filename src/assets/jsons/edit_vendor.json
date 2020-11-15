@@ -1,0 +1,27 @@
+{
+    "status": true,
+    "message": "Vendor Master fetched successfully",
+    "data": {
+      "bodyContent": {
+        "vendorName": "GLens Innovation Labs Pvt. Ltd.",
+        "contactName": "media",
+        "vendorAddress": " No 6/1 , 1st Floor Sri Jothi Complex, Murugesan Street, Balavinayagar Nagar, Arumbakkam, Chennai, 600 106, Tamil Nadu 600106",
+        "contactNo": 9986385000,
+        "vendorGstNo": "29AAGCG8023N1Z4",
+        "companyPanNo": "AAGCG8023N",
+        "location": "Chennai",
+        "contactEmail": "smita@knowledgelens.com",
+        "website": "Goods Once Sold Cannot be Taken Back",
+        "bankName": "HDFC",
+        "accountNo": "123456789000",
+        "accountName": "knowledge lens",
+        "accountIfsc": "SBIELC0034"
+
+      },
+      "type": "edit",
+      "lastUpdatedTime": "09-02-2020 07:58:30",
+      "lastUpdatedBy": "amal",
+      "companyId": "1111"
+    }
+  }
+

@@ -1,0 +1,42 @@
+.form-height {
+    max-height: calc(100vh - 9rem);
+    overflow-y: auto;
+    margin-bottom: 40px !important;
+}
+
+
+.card-form-height{
+    padding: 1rem;;
+}
+
+.calender{
+    position: absolute;
+    cursor: pointer;
+    top: 34px;
+    right: 2rem;
+}
+
+.invalid-feedback{
+    color: #dc3545;
+}
+
+
+.invalid-feedback{
+    display : block !important;
+
+}
+
+
+.bottom-btn{
+    position: absolute;
+    bottom: 0.5rem;
+}
+
+
+.receipt-height{
+    min-height: calc(100vh - 6rem);
+}
+.total-row {
+    font-size: 12px !important;
+    font-weight: bold;
+}

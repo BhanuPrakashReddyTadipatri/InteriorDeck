@@ -1,0 +1,13 @@
+<div class="col-md-12 page-heading">
+  <h5>Vendor Master</h5>
+</div>
+
+<div class="page-inner">
+  <app-simple-table-with-pagination *ngIf="configurationTable?.tableData?.headerContent?.length > 0"
+    (actionEmitter)="handleTableEmitter($event);" [tableDataWithActions]="configurationTable"
+    [tableReloadEvent]="vendorMasterSubject.asObservable()">
+  </app-simple-table-with-pagination>
+</div>
+
+<app-confirmation-dialog *ngIf="showConfirmation" [confirmJson]="confirmJson"
+  (actionPerformed)="actionPerformed($event)"> </app-confirmation-dialog>

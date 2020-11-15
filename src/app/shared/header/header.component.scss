@@ -1,0 +1,36 @@
+.logo-img {
+    max-height: 28px;
+    width: auto;
+    margin-top: -15px;
+}
+
+.logo-title {
+    top: 4px;
+    position: absolute;
+    font-size: 1.5rem;
+    padding-left: 10px;
+}
+.downloadDropdown {
+    color: hsla(0, 0%, 100%, 0.8);
+}
+.anchorClass {
+    width: 96%;
+    cursor: pointer;
+    padding: 9px 9px;
+    margin-bottom: 0px;
+    background-color: transparent !important;
+    color: #000 !important;
+}
+.notiNumber {
+    margin-bottom: 10px;
+    color: #fff;
+    background-color: #dc3545;
+}
+.nav-item.has-notified:before,
+.nav-link.has-notified:before {
+    display: none;
+}
+
+.notif-icon{
+    margin-top: -4px;
+}

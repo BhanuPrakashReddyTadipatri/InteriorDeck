@@ -1,0 +1,158 @@
+<main class="app-main app-container">
+  <!-- .wrapper -->
+  <div class="wrapper">
+    <!-- .page -->
+    <div class="page">
+      <!-- .page-inner -->
+      <div class="page-inner">
+        <!-- .page-title-bar -->
+        <header class="page-title-bar pt-2">
+          <div class="d-flex flex-column flex-md-row">
+            <p class="lead">
+              <span class="font-weight-bold">Hi, {{userName?userName:'User'}}</span> <span class="d-block text-muted font-1-rem">Here’s what’s happening...</span>
+            </p>
+            <div class="ml-auto">
+              <!-- .dropdown -->
+              <div class="dropdown">
+                <!-- <button class="btn btn-secondary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>This Week</span> <i class="fa fa-fw fa-caret-down"></i></button> -->
+                <div class="dropdown-arrow dropdown-arrow-right"></div><!-- .dropdown-menu -->
+                <div class="dropdown-menu dropdown-menu-right dropdown-menu-md stop-propagation">
+                  <!-- .custom-control -->
+                  <div class="custom-control custom-radio">
+                    <input type="radio" class="custom-control-input" id="dpToday" name="dpFilter" value="0"> <label class="custom-control-label d-flex justify-content-between" for="dpToday"><span>Today</span> <span class="text-muted">Mar 27</span></label>
+                  </div><!-- /.custom-control -->
+                  <!-- .custom-control -->
+                  <div class="custom-control custom-radio">
+                    <input type="radio" class="custom-control-input" id="dpYesterday" name="dpFilter" value="1"> <label class="custom-control-label d-flex justify-content-between" for="dpYesterday"><span>Yesterday</span> <span class="text-muted">Mar 26</span></label>
+                  </div><!-- /.custom-control -->
+                  <!-- .custom-control -->
+                  <div class="custom-control custom-radio">
+                    <input type="radio" class="custom-control-input" id="dpWeek" name="dpFilter" value="2" checked> <label class="custom-control-label d-flex justify-content-between" for="dpWeek"><span>This Week</span> <span class="text-muted">Mar 21-27</span></label>
+                  </div><!-- /.custom-control -->
+                  <!-- .custom-control -->
+                  <div class="custom-control custom-radio">
+                    <input type="radio" class="custom-control-input" id="dpMonth" name="dpFilter" value="3"> <label class="custom-control-label d-flex justify-content-between" for="dpMonth"><span>This Month</span> <span class="text-muted">Mar 1-31</span></label>
+                  </div><!-- /.custom-control -->
+                  <!-- .custom-control -->
+                  <div class="custom-control custom-radio">
+                    <input type="radio" class="custom-control-input" id="dpYear" name="dpFilter" value="4"> <label class="custom-control-label d-flex justify-content-between" for="dpYear"><span>This Year</span> <span class="text-muted">2018</span></label>
+                  </div><!-- /.custom-control -->
+                  <!-- .custom-control -->
+                  <div class="custom-control custom-radio">
+                    <input type="radio" class="custom-control-input" id="dpCustom" name="dpFilter" value="5"> <label class="custom-control-label" for="dpCustom">Custom</label>
+                    <div class="custom-control-hint my-1">
+                      <!-- datepicker:range -->
+                      <input type="text" class="form-control" data-toggle="flatpickr" data-mode="range" data-disable-mobile="true" data-date-format="Y-m-d"> <!-- /datepicker:range -->
+                    </div>
+                  </div><!-- /.custom-control -->
+                </div><!-- /.dropdown-menu -->
+              </div><!-- /.dropdown -->
+            </div>
+          </div>
+        </header><!-- /.page-title-bar -->
+        <!-- .page-section -->
+        <div class="page-section">
+          <!-- .section-block -->
+          <div class="section-block">
+            <!-- metric row -->
+            <div class="metric-row">
+              <div class="col-lg-9">
+                <div class="metric-row metric-flush">
+                  <!-- metric column -->
+                  <div class="col">
+                    <!-- .metric -->
+                    <a href="javascript:void(0)" class="metric metric-bordered align-items-center">
+                      <h2 class="metric-label"> Site Visits </h2>
+                      <p class="metric-value h3">
+                        <sub><i class="fas fa-plane-departure dashboard-icon"></i></sub> <span class="value">{{siteVisits}}</span>
+                      </p>
+                    </a> <!-- /.metric -->
+                  </div><!-- /metric column -->
+                  <!-- metric column -->
+                  <div class="col">
+                    <!-- .metric -->
+                    <a href="javascript:void(0)" class="metric metric-bordered align-items-center">
+                      <h2 class="metric-label"> Site Engineers </h2>
+                      <p class="metric-value h3">
+                        <sub><i class="fas fa-users dashboard-icon"></i></sub> <span class="value">{{siteEngineers}}</span>
+                      </p>
+                    </a> <!-- /.metric -->
+                  </div><!-- /metric column -->
+                  <!-- metric column -->
+                  <div class="col">
+                    <!-- .metric -->
+                    <a href="javascript:void(0)" class="metric metric-bordered align-items-center">
+                      <h2 class="metric-label"> Sites </h2>
+                      <p class="metric-value h3">
+                        <sub><i class="fas fa-industry dashboard-icon"></i></sub> <span class="value">{{sitesCount}}</span>
+                      </p>
+                    </a> <!-- /.metric -->
+                  </div><!-- /metric column -->
+                </div>
+              </div><!-- metric column -->
+              <div class="col-lg-3">
+                <!-- .metric -->
+                <a href="javascript:void(0)" class="metric metric-bordered">
+                  <div class="metric-badge">
+                    <span class="badge badge-lg badge-success"><span class="fas fa-circle pulse ongoing-icon"></span> ONGOING VISITS</span>
+                  </div>
+                  <p class="metric-value h3">
+                    <sub><i class="oi oi-timer"></i></sub> <span class="value">{{onSiteVisits}}</span>
+                  </p>
+                </a> <!-- /.metric -->
+              </div><!-- /metric column -->
+            </div><!-- /metric row -->
+          </div><!-- /.section-block -->
+          <!-- grid row -->
+          <div class="row">
+            <!-- grid column -->
+            <div class="col-12 col-lg-12 col-xl-4">
+              <!-- .card -->
+              <div class="card card-fluid">
+                <!-- .card-body -->
+                <div class="card-body">
+                  <h3 class="card-title mb-4"> Site Visit Up to date </h3>
+                  <div class="chartjs" style="height: 342px">
+                    <div echarts [options]="optionsBar" class="demo-chart"></div>
+                  </div>
+                </div><!-- /.card-body -->
+              </div><!-- /.card -->
+            </div><!-- /grid column -->
+            <!-- grid column -->
+            <div class="col-12 col-lg-6 col-xl-4">
+              <!-- .card -->
+              <div class="card card-fluid">
+                <!-- .card-body -->
+                <div class="card-body">
+                  <h3 class="card-title"> Ticket Status  </h3><!-- easy-pie-chart -->
+                  <div class="text-center pt-3">
+                    <div class="chart-inline-group" style="height:334px">
+                    <div echarts [options]="optionsDon" class="demo-chart-don"></div>                      
+                    </div>
+                  </div><!-- /easy-pie-chart -->
+                </div><!-- /.card-body -->
+                <!-- .card-footer -->
+              </div><!-- /.card -->
+            </div><!-- /grid column -->
+            <!-- grid column -->
+            <div class="col-12 col-lg-6 col-xl-4">
+              <!-- .card -->
+              <div class="card card-fluid">
+                <!-- .card-body -->
+                <div class="card-body pb-0">
+                  <h3 class="card-title"> Leaderboard </h3><!-- legend -->
+                  <div class="chart-inline-group" style="height:366px">
+                      <div echarts [options]="optionsLead" class="demo-chart-lead"></div>                      
+                  </div>
+                </div><!-- /.card-body -->
+                <!-- .list-group -->
+              </div><!-- /.card -->
+            </div><!-- /grid column -->
+          </div><!-- /grid row -->
+          <!-- section-deck -->
+        </div><!-- /.page-section -->
+      </div><!-- /.page-inner -->
+    </div><!-- /.page -->
+  </div>
+
+</main><!-- /.app-main -->

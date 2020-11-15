@@ -1,0 +1,16 @@
+{
+    "status": true,
+    "data": {
+        "challanNo": "12",
+        "date": "2019-10-31T18:30:00.000Z",
+        "address": "M/S.Anmol Chemicals, PlotNO.j-63, Road No.U-6 MIDC, Maharashtra-410208",
+        "GSTN": "1234",
+        "poDate": "2019-10-28T18:30:00.000Z",
+        "siteName": "Anmol Chemicals",
+        "PANnum": "234",
+        "GSTnum": "test12",
+        "totalValue": 50,
+        "termsandCond": "test",
+        "selectedPO": "CPO/201900139 / 2019000644 "
+    }
+}

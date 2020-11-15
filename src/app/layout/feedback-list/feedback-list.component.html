@@ -1,0 +1,90 @@
+<div class="page-inner" *ngIf="feedbackList">
+  <h5> {{feedbackList['length']}} Feedbacks</h5>
+  <hr>
+  <div style="display:inline-block;">
+    <input type="text" class="form-control" placeholder="Search By Category"
+      [(ngModel)]="feedbackFilter" >
+  </div>
+
+
+  <div class="">
+    <div class="anyclass" style="margin:auto;">
+      <div class="row mt-2" *ngIf="feedbackList">
+        <div class="col-md-4 mt-3" *ngFor="let feedback of feedbackList | searchFilter: searchKeys : feedbackFilter;">
+          <div class="card h-100" style="padding: 0px;">
+            <div class="card-header">
+              <div class="row">
+                  <div class="col-md-6">
+                      <h6><span class="badge badge-success pull-left  mt-2">{{feedback.categoryList}}</span></h6>
+                  </div>
+                  <div class="col-md-6 text-center">
+                      <span *ngFor="let ratings of buildArray(feedback.rating)" class="fa fa-star checked pull-right"></span><br>
+                      <label [ngSwitch]="feedback.rating">
+                        <span *ngSwitchCase="1">Bad</span>
+                        <span *ngSwitchCase="2">Below Average</span>
+                        <span *ngSwitchCase="3">Above Average</span>
+                        <span *ngSwitchCase="4">Good</span>
+                        <span *ngSwitchCase="5">Excellent</span>
+                      </label>
+                  </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-12" style="padding: 3px 17px; margin-bottom: 10px;">
+                    <p class="card-text text-desc" style="-webkit-box-orient:vertical">
+                     <b> {{feedback.siteName}}</b>
+                    </p>
+                </div>
+                <div class="col-md-12" style="padding: 3px 17px; margin-bottom: 10px;">
+                  <p class="card-text text-desc" style="-webkit-box-orient:vertical">
+                      <i class="far fa-envelope-open"></i>  {{feedback.subject}}
+                  </p>
+                </div>
+                <div class="col-md-12" style="padding: 3px 17px; margin-bottom: 10px;">
+                  <p class="card-text text-desc post-description" [ngClass]="{'limited-desc': !feedback['show']}" style="-webkit-box-orient:vertical">
+                   <i> {{feedback.description}}</i>
+                  </p>
+                  <div>
+                      <a href="javascript:void();"  data-toggle="modal" id="openDialogue" data-target="#confirmModal" (click)="feedback['show']=!feedback['show']"> Show {{show?'less':'more'}} > </a>
+                    </div>
+                </div>
+                <div class="col-md-12" *ngIf="feedback.issues" style="padding: 3px 17px; margin-bottom: 10px;">
+                  Issues : {{feedback.issues}}
+                </div>
+                <div class="col-md-12" *ngIf="feedback.suggestions" style="padding: 3px 17px; margin-bottom: 10px;">
+                  Suggestions : {{feedback.suggestions}}
+                </div>
+              </div>
+            </div>
+            <div class="card-footer text-muted">
+              <p class="card-text weight-bold">
+                 <span>- </span> {{feedback.userID}}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="confirmModal 2" role="dialog"
+  aria-labelledby="confirmModalLabel" aria-hidden="true" tabindex="-1">
+  <div class="modal-dialog" >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Feedback Description</h5>
+
+      </div>
+      <div class="modal-body">
+        <span *ngIf="feedbackList">{{feedbackList.description}}</span> 
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

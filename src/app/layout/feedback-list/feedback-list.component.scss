@@ -1,0 +1,41 @@
+.card-header {
+        background-color: #f7f7f7
+  }
+  .card {
+    margin-bottom: 1.25rem;
+  }
+  .card-body {
+    padding: 0.5rem;
+    overflow: hidden;
+    height: 150px;
+  }
+  .card-body:hover {
+    overflow-y: auto !important;
+  }
+  .card-footer {
+    padding: 0.5rem;
+    background-color: #f7f7f7
+  }
+  .box-head {
+    font-weight: 500;
+    font-size: 15px;
+  }
+.anyclass{
+    height:500px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+  .limited-desc{
+    overflow: hidden!important;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical !important;
+    -webkit-box-orient: vertical;
+  }
+  .post-description{
+    text-align: justify;
+  }
+  .checked{
+    color: orange;
+  }

@@ -1,0 +1,58 @@
+.emptyState {
+    background: white;
+    height: 100%;
+    width: 100%;
+    margin: 1%;
+    .empty-data-container {
+        height: 100%;
+        width: 100%;
+    }
+    .marginOne {
+        margin: 1%;
+    }
+    .imageContainer {
+        padding-top: 5%;
+        height: 100%;
+        width: 100%;
+    }
+    .roundedImg {
+        border-radius: 50%;
+    }
+    h3, h5 {
+        text-align: center !important;
+    }
+    #buttonGroup {
+        display: flex;
+        justify-content: center;
+        padding-bottom: 20%;
+        .buttonClass {
+            cursor: pointer;
+            padding: 0px 20px !important;
+
+            em {
+                padding-right: 7px;
+            }
+        }
+    }
+    img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 300px;
+    }
+    .classForGrid {
+        width: 60% !important;
+        height: 100% !important;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    #emptyInput {
+        h3 {
+            padding-top: 10%;
+        }
+        h5 {
+            padding-bottom: 20%;
+        }
+    }
+}

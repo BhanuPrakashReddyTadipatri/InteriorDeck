@@ -1,0 +1,616 @@
+<div class="row">
+    <div class="col-12 custom-table-with-pagination">
+        <ng-container *ngIf="tableDataWithActions?.tableData?.headerContent.length > 0">
+            <!--header buttons -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row filter-table-padding">
+                        <div class="col">
+                            <div class="d-flex filter-column pt-1 pb-2">
+                                <ng-container *ngIf="tableDataWithActions?.tableActions?.itemsPerPage?.top">
+                                    <span class="pt-2">Items Per Page</span>
+                                    <ng-select name="typeofElement" [items]="metaData['display_options']" class="ml-2 mr-2" placeholder="Select No of items to display" [clearable]="false" dropdownPosition="bottom" [(ngModel)]="metaData['no_of_items_to_display']" bindValue="value" bindLabel="label"
+                                        (ngModelChange)="onChangeInDisplay(metaData['no_of_items_to_display'])">
+                                    </ng-select>
+                                </ng-container>
+                                <ng-container *ngIf="tableDataWithActions?.tableActions?.columnFilter?.show">
+                                    <ng-select name="columnSelect" [items]="this.headerData" placeholder="Select Columns" [clearable]="false" dropdownPosition="bottom" [(ngModel)]="filteredColumns" bindLabel="label" [multiple]="true" (ngModelChange)="setHeaderData()" [closeOnSelect]="false">
+                                        <ng-template ng-header-tmp>
+                                            <div>
+                                                <button class="btn btn-link" (click)="onSelectAll()">Select All</button>
+                                                <button class="btn btn-link" (click)="onClearAll()">Clear All</button>
+                                            </div>
+                                        </ng-template>
+                                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                <span class="ng-value-label">{{item.label}}</span>
+                                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                            </div>
+                                            <div class="ng-value" *ngIf="items.length > 2">
+                                                <span class="ng-value-label">{{items.length - 2}} more...</span>
+                                            </div>
+                                        </ng-template>
+                                    </ng-select>
+                                    &nbsp;&nbsp;<span class="fs-18"><i class="fa fa-info-circle" aria-hidden="true" container="body"
+                      [ngbTooltip]="'Filter Columns'"></i></span>
+                                </ng-container>
+                            </div>
+                        </div>
+                        <div class="show-mobile col-md-6 py-2">
+                            <div ngbDropdown display="dynamic" placement="bottom-right">
+                                <button class="action-btn ml-2" id="dropdownAction" ngbDropdownToggle>
+                  <i class="fa fa-ellipsis-v"></i>
+                </button>
+                                <div ngbDropdownMenu aria-labelledby="dropdownAction">
+                                    <ng-container *ngIf="tableDataWithActions?.tableActions?.externalActions.length > 0">
+                                        <button class="btn btn-basic" *ngFor="let btn of tableDataWithActions.tableActions.externalActions" (click)="emitAction(btn)" [ngClass]="btn.class" ngbDropdownItem>{{btn.label}}</button>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col py-2 show-web mr-2">
+                            <ng-container *ngIf="tableDataWithActions?.tableActions?.externalActions.length > 0">
+                                <div *ngFor="let btn of tableDataWithActions.tableActions.externalActions" [attr.title]="btn.label" class="action-btn ml-2" (click)="emitAction(btn)" [ngClass]="btn.class">
+                                    <i aria-hidden="true" [ngClass]="btn.icon"></i> {{btn.label}}
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- table -->
+            <div class="col-md-12 p-0">
+                <div class="dataTables_scroll">
+                    <div class="dataTables_scrollHead" [ngStyle]="{'overflow' : emptyTableNotify && scrollTableHeader ? 'auto' : 'hidden'}" #scrollHeader>
+                        <div class="dataTables_scrollHeadInner">
+                            <!-- table scroll head-->
+                            <table class="table dataTable table-hover table-stripped table-bordered" role="grid" [ngClass]="{'table-with-actions': tableDataWithActions?.tableActions?.enableActions}">
+                                <thead class="th-header table-cell-width-header">
+                                    <tr role="row">
+                                        <th *ngIf="tableDataWithActions?.tableActions?.enableActions && 
+                      (tableDataWithActions?.tableActions?.actionPosition?.left || tableDataWithActions?.tableActions?.actionPosition?.fixedLeft) &&
+                      tableDataWithActions?.tableActions?.actions?.length" class="th-header" class="table-action-width">
+                                        </th>
+                                        <ng-container *ngIf="tableDataWithActions?.tableActions?.showSerialNumber">
+                                            <th class="table-coloum-serial-no-header th-header text-center">
+                                                <div [ngStyle]="{'height' : tableDataWithActions?.tableActions?.columnSearch?.enable ? '50px' : ''}">
+                                                    Sl. No.</div>
+                                            </th>
+                                        </ng-container>
+                                        <ng-container *ngFor="let eachHeader of tableDataWithActions['tableData']['headerContent']">
+                                            <th class="th-header table-cell-width-header" [ngClass]="[tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.alignCenter ? 'text-center' : '',
+                      tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.customColumnClass ? tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.customColumnClass : '']">
+                                                <span>{{eachHeader['label']}}</span>
+
+                                                <span class="sort" *ngIf="tableDataWithActions?.tableActions?.columnSort?.enable">
+                          <span (click)="sort(eachHeader.key)"
+                            [class.invisible]="!(!tableDataWithActions?.tableActions?.columnSort?.sortExceptions ||
+                        (tableDataWithActions?.tableActions?.columnSort?.sortExceptions.indexOf(eachHeader.key)===-1))">
+                            <i class="fa" [ngClass]="{'fa-sort': column != eachHeader.key, 
+                        'fa-sort-asc': (column == eachHeader.key && !isDesc), 
+                        'fa-sort-desc': (column == eachHeader.key && isDesc) }" aria-hidden="true"> </i>
+                          </span>
+                                                </span>
+                                                <span (click)="$event.stopPropagation();" class="search" *ngIf="tableDataWithActions?.tableActions?.columnSearch?.enable">
+                          <ng-container>
+                            <input
+                              [class.invisible]="!(!tableDataWithActions?.tableActions?.columnSearch?.searchExceptions ||
+                          (tableDataWithActions?.tableActions?.columnSearch?.searchExceptions.indexOf(eachHeader.key)===-1))"
+                              type="text" class="form-control" placeholder="Search" (focus)="$event.stopPropagation()"
+                              [(ngModel)]="columnSearchModel[eachHeader.key]" (ngModelChange)="searchColumn()" />
+                          </ng-container>
+                        </span>
+                                            </th>
+                                        </ng-container>
+                                        <th *ngIf="tableDataWithActions?.tableActions?.enableActions  &&
+                      (tableDataWithActions?.tableActions?.actionPosition?.right || tableDataWithActions?.tableActions?.actionPosition?.fixedRight)  &&
+                       tableDataWithActions?.tableActions?.actions?.length" class="th-header" class="table-action-width">
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="dataTables_scrollBody" [ngStyle]="{'max-height':tableDataWithActions && tableDataWithActions?.tableActions?.stylings?.height ? tableDataWithActions?.tableActions?.stylings.height : 'calc(100vh - 300px)',
+                'overflow' : !emptyTableNotify || !scrollTableHeader ? 'scroll' : 'hidden'}" (scroll)="scrollOnToRight($event)" #scrollBody>
+                        <!-- table scroll body with collapsed head-->
+                        <table class="table dataTable table-hover table-stripped table-bordered" [ngClass]="{'table-with-actions': tableDataWithActions['tableActions']['enableActions']}">
+                            <thead style="visibility: collapse !important" class="th-header table-cell-width-header">
+                                <tr role="row">
+                                    <th *ngIf="tableDataWithActions?.tableActions?.enableActions  &&
+                    (tableDataWithActions?.tableActions?.actionPosition?.left || tableDataWithActions?.tableActions?.actionPosition?.fixedLeft) &&
+                      tableDataWithActions?.tableActions?.actions?.length" class="th-header" class="table-action-width">
+                                    </th>
+                                    <ng-container *ngIf="tableDataWithActions?.tableActions?.showSerialNumber">
+                                        <th class="table-coloum-serial-no-header th-header text-center">
+                                            <div [ngStyle]="{'height' : tableDataWithActions?.tableActions?.columnSearch?.enable ? '50px' : ''}">
+                                                Sl. No.</div>
+                                        </th>
+                                    </ng-container>
+                                    <ng-container *ngFor="let eachHeader of tableDataWithActions['tableData']['headerContent']">
+                                        <th [ngClass]="[tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.alignCenter ? 'text-center' : '',
+                    tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.customColumnClass ? tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.customColumnClass : '']">
+                                            <span>{{eachHeader['label']}}</span>
+                                            <span class="sort" *ngIf="tableDataWithActions?.tableActions?.columnSort?.enable">
+                        <span (click)="sort(eachHeader.key)" [class.invisible]="!(!tableDataWithActions?.tableActions?.columnSort?.sortExceptions ||
+                      (tableDataWithActions?.tableActions?.columnSort?.sortExceptions.indexOf(eachHeader.key)===-1))">
+                          <i class="fa" [ngClass]="{'fa-sort': column != eachHeader.key, 
+                      'fa-sort-asc': (column == eachHeader.key && !isDesc), 
+                      'fa-sort-desc': (column == eachHeader.key && isDesc) }" aria-hidden="true"> </i>
+                        </span>
+                                            </span>
+                                            <span (click)="$event.stopPropagation();" class="search" *ngIf="tableDataWithActions?.tableActions?.columnSearch?.enable">
+                        <ng-container>
+                          <input
+                            [class.invisible]="!(!tableDataWithActions?.tableActions?.columnSearch?.searchExceptions ||
+                        (tableDataWithActions?.tableActions?.columnSearch?.searchExceptions.indexOf(eachHeader.key)===-1))"
+                            type="text" class="form-control" placeholder="Search" (focus)="$event.stopPropagation()"
+                            [(ngModel)]="columnSearchModel[eachHeader.key]" (ngModelChange)="searchColumn()" />
+                        </ng-container>
+                      </span>
+                                        </th>
+                                    </ng-container>
+                                    <th *ngIf="tableDataWithActions['tableActions']['enableActions']  &&
+                    (tableDataWithActions?.tableActions?.actionPosition?.right || tableDataWithActions?.tableActions?.actionPosition?.fixedRight) &&
+                      tableDataWithActions['tableActions']['actions'].length" class="th-header" class="table-action-width">
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container *ngIf="seggregatedTableContent[metaData['counter'] - 1]">
+                                    <ng-container *ngFor="let eachItem of seggregatedTableContent[metaData['counter'] - 1]; let rowIndex=index">
+                                        <tr [ngClass]="eachItem.classList">
+
+                                            <ng-container *ngIf="tableDataWithActions?.tableActions?.enableActions &&
+                        (tableDataWithActions?.tableActions?.actionPosition?.left || tableDataWithActions?.tableActions?.actionPosition?.fixedLeft) && 
+                         tableDataWithActions?.tableActions?.actions.length >0">
+
+                                                <td [style.width.px]="tableDataWithActions?.tableActions.width" class="table-action-width">
+                                                    <ng-container *ngFor="let action of tableDataWithActions?.tableActions?.actions">
+                                                        <ng-container *ngIf="!eachItem[action.hiddenKey] else noIcon">
+                                                            <ng-container *ngIf="action.basedOnRowChange else normalAction">
+                                                                <ng-container *ngIf="action.rowKey && eachItem[action.rowKey] else inactiveButtons">
+                                                                    <a href="javascript:void(0)" class="label-action {{action.disabled || tableDataWithActions?.tableActions?.disabled? 'disabled': ''}}" [ngClass]="action.class" *ngIf="action.onlyIcon" [ngbTooltip]="action.activeLabel" container="body" (click)="emitAction(action, eachItem,rowIndex)">
+                                                                        <i aria-hidden="true" class="fa" [ngClass]="action.activeIcon"></i></a>
+                                                                    <button *ngIf="!action.onlyIcon" class="btn btn-sm" [ngClass]="action.activeClass" (click)="emitAction(action, eachItem,rowIndex)" [attr.disabled]="(action.disabled ||tableDataWithActions?.tableActions.disabled)? '': null">
+                                    {{action.activeLabel}} <i aria-hidden="true" class="fa"
+                                      [ngClass]="action.activeIcon"></i>
+                                  </button>
+                                                                </ng-container>
+                                                                <ng-template #inactiveButtons>
+                                                                    <a href="javascript:void(0)" class="label-action {{action.disabled || tableDataWithActions?.tableActions?.disabled? 'disabled': ''}}" [ngClass]="action.class" *ngIf="action.onlyIcon" [ngbTooltip]="action.inactiveLabel" container="body" (click)="emitAction(action, eachItem,rowIndex)">
+                                                                        <i aria-hidden="true" class="fa" [ngClass]="action.inactiveIcon"></i></a>
+                                                                    <button *ngIf="!action.onlyIcon" class="btn btn-sm" [ngClass]="action.inactiveClass" (click)="emitAction(action, eachItem,rowIndex)" [attr.disabled]="(action.disabled ||tableDataWithActions?.tableActions.disabled)? '': null">
+                                    {{action.inactiveLabel}} <i aria-hidden="true" class="fa"
+                                      [ngClass]="action.inactiveIcon"></i>
+                                  </button>
+                                                                </ng-template>
+                                                            </ng-container>
+                                                            <ng-template #normalAction>
+                                                                <a href="javascript:void(0)" class="label-action {{action.disabled || tableDataWithActions?.tableActions?.disabled? 'disabled': ''}}" [ngClass]="action.class" *ngIf="action.onlyIcon" [ngbTooltip]="action.label" container="body" (click)="emitAction(action, eachItem,rowIndex)">
+                                                                    <i aria-hidden="true" class="fa" [ngClass]="action.icon"></i></a>
+                                                                <button *ngIf="!action.onlyIcon" class="btn btn-sm" [ngClass]="action.class" (click)="emitAction(action, eachItem,rowIndex)" [attr.disabled]="(action.disabled ||tableDataWithActions?.tableActions.disabled)? '': null">
+                                  {{action.label}} <i aria-hidden="true" class="fa" [ngClass]="action.icon"></i>
+                                </button>
+                                                            </ng-template>
+                                                        </ng-container>
+                                                        <ng-template #noIcon>
+                                                            <span class="pc-4"></span>
+                                                        </ng-template>
+                                                    </ng-container>
+                                                </td>
+                                            </ng-container>
+                                            <ng-container *ngIf="tableDataWithActions?.tableActions?.showSerialNumber">
+                                                <td class="table-coloum-serial-no-body text-center">
+                                                    <span>
+                            {{(rowIndex + 1)+((metaData['counter'] - 1)*metaData['no_of_items_to_display'])}}
+                          </span>
+                                                </td>
+                                            </ng-container>
+                                            <ng-container *ngFor="let eachHeader of tableDataWithActions['tableData']['headerContent']; let ind = index">
+
+                                                <td class="row-item" class="table-cell-width" [ngClass]="[tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.alignCenter ? 'text-center' : '',
+                          tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.customColumnClass ? tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.customColumnClass : '']"
+                                                    [ngStyle]="{'background' : (tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.tdStyles?eachItem.color:''), 'color' : (tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.tdStyles ?eachItem.font:'')}">
+                                                    <ng-container *ngIf="!['check-box'].includes(eachHeader['type'])">
+                                                        <ng-container *ngIf="(tableDataWithActions.clickableColumns && tableDataWithActions.clickableColumns.list && tableDataWithActions.clickableColumns.list.indexOf(eachHeader.key) > -1) then clickableCell else plainText">
+                                                        </ng-container>
+                                                        <ng-template #clickableCell>
+                                                            <span class="clickable-element" [ngClass]="tableDataWithActions?.clickableColumns?.class" (click)="emitAction({'type': 'cellClick'}, eachItem,rowIndex , eachHeader['key'],'cellKey')">
+                                  {{eachItem[eachHeader['key']]}}</span>
+                                                        </ng-template>
+                                                        <ng-template #plainText>
+
+                                                            <ng-container *ngIf="tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.innerHtml else normalText">
+                                                                <span class="plain-text" [innerHtml]="eachItem[eachHeader['key']]"></span>
+                                                            </ng-container>
+                                                            <ng-template #normalText>
+                                                                <span class="plain-text" [ngClass]="[tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.spanStyles ? 'status-colored' : '' , tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.valueAsClass && eachItem && eachHeader['key'] && eachItem[eachHeader['key']] ? eachItem[eachHeader['key']] :'']">{{eachItem[eachHeader['key']] }}</span>
+                                                            </ng-template>
+                                                        </ng-template>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="['check-box'].includes(eachHeader['type'])">
+                                                        <input type="checkbox" name="check-box" class="check-mark" (change)="emitAction({'type': 'check-box-change'}, eachItem, rowIndex, $event)" [checked]="eachItem[eachHeader['key']]">
+                                                    </ng-container>
+                                                </td>
+
+                                            </ng-container>
+                                            <ng-container *ngIf="tableDataWithActions?.tableActions?.enableActions &&
+                        (tableDataWithActions?.tableActions?.actionPosition?.right || tableDataWithActions?.tableActions?.actionPosition?.fixedRight) &&
+                          tableDataWithActions?.tableActions?.actions.length >0">
+
+                                                <td [style.width.px]="tableDataWithActions?.tableActions.width" class="table-action-width">
+                                                    <ng-container *ngFor="let action of tableDataWithActions?.tableActions?.actions">
+                                                        <ng-container *ngIf="!eachItem[action.hiddenKey] else noIcon">
+                                                            <ng-container *ngIf="action.basedOnRowChange else normalAction">
+                                                                <ng-container *ngIf="action.rowKey && eachItem[action.rowKey] else inactiveButtons">
+                                                                    <a href="javascript:void(0)" class="label-action {{action.disabled || tableDataWithActions?.tableActions?.disabled? 'disabled': ''}}" [ngClass]="action.class" *ngIf="action.onlyIcon" [ngbTooltip]="action.activeLabel" container="body" (click)="emitAction(action, eachItem,rowIndex)">
+                                                                        <i aria-hidden="true" class="fa" [ngClass]="action.activeIcon"></i></a>
+                                                                    <button *ngIf="!action.onlyIcon" class="btn btn-sm" [ngClass]="action.activeClass" (click)="emitAction(action, eachItem,rowIndex)" [attr.disabled]="(action.disabled ||tableDataWithActions?.tableActions.disabled)? '': null">
+                                    {{action.activeLabel}} <i aria-hidden="true" class="fa"
+                                      [ngClass]="action.activeIcon"></i>
+                                  </button>
+                                                                </ng-container>
+                                                                <ng-template #inactiveButtons>
+                                                                    <a href="javascript:void(0)" class="label-action {{action.disabled || tableDataWithActions?.tableActions?.disabled? 'disabled': ''}}" [ngClass]="action.class" *ngIf="action.onlyIcon" [ngbTooltip]="action.inactiveLabel" container="body" (click)="emitAction(action, eachItem,rowIndex)">
+                                                                        <i aria-hidden="true" class="fa" [ngClass]="action.inactiveIcon"></i></a>
+                                                                    <button *ngIf="!action.onlyIcon" class="btn btn-sm" [ngClass]="action.inactiveClass" (click)="emitAction(action, eachItem,rowIndex)" [attr.disabled]="(action.disabled ||tableDataWithActions?.tableActions.disabled)? '': null">
+                                    {{action.inactiveLabel}} <i aria-hidden="true" class="fa"
+                                      [ngClass]="action.inactiveIcon"></i>
+                                  </button>
+                                                                </ng-template>
+                                                            </ng-container>
+                                                            <ng-template #normalAction>
+                                                                <a href="javascript:void(0)" class="label-action {{action.disabled || tableDataWithActions?.tableActions?.disabled? 'disabled': ''}}" [ngClass]="action.class" *ngIf="action.onlyIcon" [ngbTooltip]="action.label" container="body" (click)="emitAction(action, eachItem,rowIndex)">
+                                                                    <i aria-hidden="true" class="fa" [ngClass]="action.icon"></i></a>
+                                                                <button *ngIf="!action.onlyIcon" class="btn btn-sm" [ngClass]="action.class" (click)="emitAction(action, eachItem,rowIndex)" [attr.disabled]="(action.disabled ||tableDataWithActions?.tableActions.disabled)? '': null">
+                                  {{action.label}} <i aria-hidden="true" class="fa" [ngClass]="action.icon"></i>
+                                </button>
+                                                            </ng-template>
+                                                        </ng-container>
+                                                        <ng-template #noIcon>
+                                                            <span class="pc-4"></span>
+                                                        </ng-template>
+                                                    </ng-container>
+                                                </td>
+                                            </ng-container>
+                                        </tr>
+                                    </ng-container>
+                                </ng-container>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!--- Table Left action button fixed-->
+                    <ng-container *ngIf="tableDataWithActions?.tableActions?.enableActions  && tableDataWithActions?.tableActions?.actionPosition?.fixedLeft && tableDataWithActions?.tableActions?.actions?.length">
+                        <div style="width:138px; overflow: hidden;" class="clone clone-left">
+                            <div style="position:relative; overflow:hidden;" aria-hidden="true">
+                                <table class="table dataTable table-stripped table-bordered" [ngClass]="{'table-with-actions': tableDataWithActions['tableActions']['enableActions']}">
+                                    <thead class="th-header table-cell-width-header">
+                                        <tr role="row">
+                                            <th [ngStyle]="{'height': tableDataWithActions?.tableActions?.columnSearch?.enable ? '50px': '20px'}" *ngIf="tableDataWithActions?.tableActions?.enableActions  && tableDataWithActions?.tableActions?.actionPosition?.fixedLeft && tableDataWithActions?.tableActions?.actions?.length"
+                                                class="th-header fixed-side table-action-width">
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div style="position: relative; overflow: hidden;">
+                                <div style="width:148px;overflow-x:hidden;" class="scroll_LeftBody" [ngStyle]="{'max-height':tableDataWithActions && tableDataWithActions?.tableActions?.stylings?.height ? 
+                'calc('+tableDataWithActions?.tableActions?.stylings.height+' - calc( 8px ))' : 'calc(100vh - 300px - 8px)',
+           'overflow-y' : !emptyTableNotify || !scrollTableHeader ? 'auto' : 'hidden'}" (scroll)="scrollToBody($event)" #scrollLeftBody>
+                                    <table class="table dataTable table-stripped table-bordered" [ngClass]="{'table-with-actions': tableDataWithActions['tableActions']['enableActions']}">
+                                        <thead class="th-header table-cell-width-header" style="visibility: collapse!important;">
+                                            <tr role="row">
+                                                <th *ngIf="tableDataWithActions?.tableActions?.enableActions  && tableDataWithActions?.tableActions?.actionPosition?.fixedLeft && tableDataWithActions?.tableActions?.actions?.length" class="th-header table-action-width fixed-side">
+                                                </th>
+                                                <ng-container *ngIf="tableDataWithActions?.tableActions?.showSerialNumber">
+                                                    <th class="table-coloum-serial-no-header th-header text-center">
+                                                        <div [ngStyle]="{'height' : tableDataWithActions?.tableActions?.columnSearch?.enable ? '50px' : ''}">
+                                                            Sl. No.</div>
+                                                    </th>
+                                                </ng-container>
+                                                <ng-container *ngFor="let eachHeader of tableDataWithActions['tableData']['headerContent']">
+                                                    <th [ngClass]="[tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.alignCenter ? 'text-center' : '',
+                  tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.customColumnClass ? tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.customColumnClass : '']">
+                                                        <span>{{eachHeader['label']}}</span>
+                                                        <span class="sort" *ngIf="tableDataWithActions?.tableActions?.columnSort?.enable">
+                              <span (click)="sort(eachHeader.key)" [class.invisible]="!(!tableDataWithActions?.tableActions?.columnSort?.sortExceptions ||
+                    (tableDataWithActions?.tableActions?.columnSort?.sortExceptions.indexOf(eachHeader.key)===-1))">
+                                <i class="fa" [ngClass]="{'fa-sort': column != eachHeader.key, 
+                    'fa-sort-asc': (column == eachHeader.key && !isDesc), 
+                    'fa-sort-desc': (column == eachHeader.key && isDesc) }" aria-hidden="true"> </i>
+                              </span>
+                                                        </span>
+                                                        <span (click)="$event.stopPropagation();" class="search" *ngIf="tableDataWithActions?.tableActions?.columnSearch?.enable">
+                              <ng-container>
+                                <input
+                                  [class.invisible]="!(!tableDataWithActions?.tableActions?.columnSearch?.searchExceptions ||
+                      (tableDataWithActions?.tableActions?.columnSearch?.searchExceptions.indexOf(eachHeader.key)===-1))"
+                                  type="text" class="form-control" placeholder="Search"
+                                  (focus)="$event.stopPropagation()" [(ngModel)]="columnSearchModel[eachHeader.key]"
+                                  (ngModelChange)="searchColumn()" />
+                              </ng-container>
+                            </span>
+                                                    </th>
+                                                </ng-container>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <ng-container *ngIf="seggregatedTableContent[metaData['counter'] - 1]">
+                                                <ng-container *ngFor="let eachItem of seggregatedTableContent[metaData['counter'] - 1]; let rowIndex=index">
+                                                    <tr [ngClass]="eachItem.classList">
+
+                                                        <ng-container *ngIf="tableDataWithActions?.tableActions?.enableActions && tableDataWithActions?.tableActions?.actionPosition?.fixedLeft && tableDataWithActions?.tableActions?.actions.length >0">
+
+                                                            <td [style.width.px]="tableDataWithActions?.tableActions.width" class="table-action-width fixed-side">
+                                                                <ng-container *ngFor="let action of tableDataWithActions?.tableActions?.actions">
+                                                                    <ng-container *ngIf="!eachItem[action.hiddenKey] else noIcon">
+                                                                        <ng-container *ngIf="action.basedOnRowChange else normalAction">
+                                                                            <ng-container *ngIf="action.rowKey && eachItem[action.rowKey] else inactiveButtons">
+                                                                                <a href="javascript:void(0)" class="label-action {{action.disabled || tableDataWithActions?.tableActions?.disabled? 'disabled': ''}}" [ngClass]="action.class" *ngIf="action.onlyIcon" [ngbTooltip]="action.activeLabel" container="body" (click)="emitAction(action, eachItem,rowIndex)">
+                                                                                    <i aria-hidden="true" class="fa" [ngClass]="action.activeIcon"></i></a>
+                                                                                <button *ngIf="!action.onlyIcon" class="btn btn-sm" [ngClass]="action.activeClass" (click)="emitAction(action, eachItem,rowIndex)" [attr.disabled]="(action.disabled ||tableDataWithActions?.tableActions.disabled)? '': null">
+                                          {{action.activeLabel}} <i aria-hidden="true" class="fa"
+                                            [ngClass]="action.activeIcon"></i>
+                                        </button>
+                                                                            </ng-container>
+                                                                            <ng-template #inactiveButtons>
+                                                                                <a href="javascript:void(0)" class="label-action {{action.disabled || tableDataWithActions?.tableActions?.disabled? 'disabled': ''}}" [ngClass]="action.class" *ngIf="action.onlyIcon" [ngbTooltip]="action.inactiveLabel" container="body" (click)="emitAction(action, eachItem,rowIndex)">
+                                                                                    <i aria-hidden="true" class="fa" [ngClass]="action.inactiveIcon"></i></a>
+                                                                                <button *ngIf="!action.onlyIcon" class="btn btn-sm" [ngClass]="action.inactiveClass" (click)="emitAction(action, eachItem,rowIndex)" [attr.disabled]="(action.disabled ||tableDataWithActions?.tableActions.disabled)? '': null">
+                                          {{action.inactiveLabel}} <i aria-hidden="true" class="fa"
+                                            [ngClass]="action.inactiveIcon"></i>
+                                        </button>
+                                                                            </ng-template>
+                                                                        </ng-container>
+                                                                        <ng-template #normalAction>
+                                                                            <a href="javascript:void(0)" class="label-action {{action.disabled || tableDataWithActions?.tableActions?.disabled? 'disabled': ''}}" [ngClass]="action.class" *ngIf="action.onlyIcon" [ngbTooltip]="action.label" container="body" (click)="emitAction(action, eachItem,rowIndex)">
+                                                                                <i aria-hidden="true" class="fa" [ngClass]="action.icon"></i></a>
+                                                                            <button *ngIf="!action.onlyIcon" class="btn btn-sm" [ngClass]="action.class" (click)="emitAction(action, eachItem,rowIndex)" [attr.disabled]="(action.disabled ||tableDataWithActions?.tableActions.disabled)? '': null">
+                                        {{action.label}} <i aria-hidden="true" class="fa" [ngClass]="action.icon"></i>
+                                      </button>
+                                                                        </ng-template>
+                                                                    </ng-container>
+                                                                    <ng-template #noIcon>
+                                                                        <span class="pc-4"></span>
+                                                                    </ng-template>
+                                                                </ng-container>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="tableDataWithActions?.tableActions?.showSerialNumber">
+                                                            <td class="table-coloum-serial-no-body text-center">
+                                                                <span>
+                                  {{(rowIndex + 1)+((metaData['counter'] - 1)*metaData['no_of_items_to_display'])}}
+                                </span>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container *ngFor="let eachHeader of tableDataWithActions['tableData']['headerContent']; let ind = index">
+
+                                                            <td class="row-item" class="table-cell-width" [ngClass]="[tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.alignCenter ? 'text-center' : '',
+                        tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.customColumnClass ? tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.customColumnClass : '']">
+                                                                <ng-container *ngIf="!['check-box'].includes(eachHeader['type'])">
+                                                                    <ng-container *ngIf="(tableDataWithActions.clickableColumns && tableDataWithActions.clickableColumns.list && tableDataWithActions.clickableColumns.list.indexOf(eachHeader.key) > -1) then clickableCell else plainText">
+                                                                    </ng-container>
+                                                                    <ng-template #clickableCell>
+                                                                        <span class="clickable-element" [ngClass]="tableDataWithActions?.clickableColumns?.class" (click)="emitAction({'type': 'cellClick'}, eachItem,rowIndex, eachHeader['key'],'cellKey')">
+                                      {{eachItem[eachHeader['key']]}}</span>
+                                                                    </ng-template>
+                                                                    <ng-template #plainText>
+
+                                                                        <ng-container *ngIf="tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.innerHtml else normalText">
+                                                                            <span class="plain-text" [innerHtml]="eachItem[eachHeader['key']]"></span>
+                                                                        </ng-container>
+                                                                        <ng-template #normalText>
+                                                                            <span class="plain-text" [ngClass]="[tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.spanStyles ? 'status-colored' : '' , tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.valueAsClass && eachItem && eachHeader['key'] && eachItem[eachHeader['key']] ? eachItem[eachHeader['key']] :'']">{{eachItem[eachHeader['key']] }}</span>
+                                                                        </ng-template>
+                                                                    </ng-template>
+                                                                </ng-container>
+                                                                <ng-container *ngIf="['check-box'].includes(eachHeader['type'])">
+                                                                    <input type="checkbox" name="check-box" class="check-mark" (change)="emitAction({'type': 'check-box-change'}, eachItem, rowIndex, $event)" [checked]="eachItem[eachHeader['key']]">
+                                                                </ng-container>
+                                                            </td>
+
+
+
+                                                        </ng-container>
+                                                    </tr>
+                                                </ng-container>
+                                            </ng-container>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <!--- Table Right action button fixed -->
+                    <ng-container *ngIf="tableDataWithActions?.tableActions?.enableActions  && tableDataWithActions?.tableActions?.actionPosition?.fixedRight && tableDataWithActions?.tableActions?.actions?.length">
+                        <div style="width:138px; overflow: hidden;" class="clone clone-right">
+                            <div style="position:relative; overflow:hidden;" aria-hidden="true">
+                                <table class="table dataTable table-stripped table-bordered" [ngClass]="{'table-with-actions': tableDataWithActions['tableActions']['enableActions']}">
+                                    <thead class="th-header table-cell-width-header">
+                                        <tr role="row">
+                                            <th [ngStyle]="{'height': tableDataWithActions?.tableActions?.columnSearch?.enable ? '50px': '20px'}" *ngIf="tableDataWithActions?.tableActions?.enableActions  && tableDataWithActions?.tableActions?.actionPosition?.fixedRight && tableDataWithActions?.tableActions?.actions?.length"
+                                                class="th-header table-action-width  fixed-side">
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div style="position: relative; overflow: hidden;">
+                                <div style="width:148px;overflow-x:hidden;" class="scroll_RightBody" [ngStyle]="{'max-height':tableDataWithActions && tableDataWithActions?.tableActions?.stylings?.height ? 
+                'calc('+tableDataWithActions?.tableActions?.stylings.height+' - calc( 8px ))' : 'calc(100vh - 300px - 8px)',
+           'overflow-y' : !emptyTableNotify || !scrollTableHeader ? 'auto' : 'hidden'}" (scroll)="scrollToBody($event)" #scrollLeftBody>
+                                    <table class="table dataTable table-stripped table-bordered" [ngClass]="{'table-with-actions': tableDataWithActions['tableActions']['enableActions']}">
+                                        <thead class="th-header table-cell-width-header" style="visibility: collapse!important;">
+                                            <tr role="row">
+                                                <th *ngIf="tableDataWithActions?.tableActions?.enableActions  && tableDataWithActions?.tableActions?.actionPosition?.fixedRight && tableDataWithActions?.tableActions?.actions?.length" class="th-header table-action-width  fixed-side">
+                                                </th>
+                                                <ng-container *ngIf="tableDataWithActions?.tableActions?.showSerialNumber">
+                                                    <th class="table-coloum-serial-no-header th-header text-center">
+                                                        <div [ngStyle]="{'height' : tableDataWithActions?.tableActions?.columnSearch?.enable ? '50px' : ''}">
+                                                            Sl. No.</div>
+                                                    </th>
+                                                </ng-container>
+                                                <ng-container *ngFor="let eachHeader of tableDataWithActions['tableData']['headerContent']">
+                                                    <th [ngClass]="[tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.alignCenter ? 'text-center' : '',
+                  tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.customColumnClass ? tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.customColumnClass : '']">
+                                                        <span>{{eachHeader['label']}}</span>
+                                                        <span class="sort" *ngIf="tableDataWithActions?.tableActions?.columnSort?.enable">
+                              <span (click)="sort(eachHeader.key)" [class.invisible]="!(!tableDataWithActions?.tableActions?.columnSort?.sortExceptions ||
+                    (tableDataWithActions?.tableActions?.columnSort?.sortExceptions.indexOf(eachHeader.key)===-1))">
+                                <i class="fa" [ngClass]="{'fa-sort': column != eachHeader.key, 
+                    'fa-sort-asc': (column == eachHeader.key && !isDesc), 
+                    'fa-sort-desc': (column == eachHeader.key && isDesc) }" aria-hidden="true"> </i>
+                              </span>
+                                                        </span>
+                                                        <span (click)="$event.stopPropagation();" class="search" *ngIf="tableDataWithActions?.tableActions?.columnSearch?.enable">
+                              <ng-container>
+                                <input
+                                  [class.invisible]="!(!tableDataWithActions?.tableActions?.columnSearch?.searchExceptions ||
+                      (tableDataWithActions?.tableActions?.columnSearch?.searchExceptions.indexOf(eachHeader.key)===-1))"
+                                  type="text" class="form-control" placeholder="Search"
+                                  (focus)="$event.stopPropagation()" [(ngModel)]="columnSearchModel[eachHeader.key]"
+                                  (ngModelChange)="searchColumn()" />
+                              </ng-container>
+                            </span>
+                                                    </th>
+                                                </ng-container>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <ng-container *ngIf="seggregatedTableContent[metaData['counter'] - 1]">
+                                                <ng-container *ngFor="let eachItem of seggregatedTableContent[metaData['counter'] - 1]; let rowIndex=index">
+                                                    <tr [ngClass]="eachItem.classList">
+
+                                                        <ng-container *ngIf="tableDataWithActions?.tableActions?.enableActions && tableDataWithActions?.tableActions?.actionPosition?.fixedRight && tableDataWithActions?.tableActions?.actions.length >0">
+
+                                                            <td [style.width.px]="tableDataWithActions?.tableActions.width" class="table-action-width  fixed-side">
+                                                                <ng-container *ngFor="let action of tableDataWithActions?.tableActions?.actions">
+                                                                    <ng-container *ngIf="!eachItem[action.hiddenKey] else noIcon">
+                                                                        <ng-container *ngIf="action.basedOnRowChange else normalAction">
+                                                                            <ng-container *ngIf="action.rowKey && eachItem[action.rowKey] else inactiveButtons">
+                                                                                <a href="javascript:void(0)" class="label-action {{action.disabled || tableDataWithActions?.tableActions?.disabled? 'disabled': ''}}" [ngClass]="action.class" *ngIf="action.onlyIcon" [ngbTooltip]="action.activeLabel" container="body" (click)="emitAction(action, eachItem,rowIndex)">
+                                                                                    <i aria-hidden="true" class="fa" [ngClass]="action.activeIcon"></i></a>
+                                                                                <button *ngIf="!action.onlyIcon" class="btn btn-sm" [ngClass]="action.activeClass" (click)="emitAction(action, eachItem,rowIndex)" [attr.disabled]="(action.disabled ||tableDataWithActions?.tableActions.disabled)? '': null">
+                                          {{action.activeLabel}} <i aria-hidden="true" class="fa"
+                                            [ngClass]="action.activeIcon"></i>
+                                        </button>
+                                                                            </ng-container>
+                                                                            <ng-template #inactiveButtons>
+                                                                                <a href="javascript:void(0)" class="label-action {{action.disabled || tableDataWithActions?.tableActions?.disabled? 'disabled': ''}}" [ngClass]="action.class" *ngIf="action.onlyIcon" [ngbTooltip]="action.inactiveLabel" container="body" (click)="emitAction(action, eachItem,rowIndex)">
+                                                                                    <i aria-hidden="true" class="fa" [ngClass]="action.inactiveIcon"></i></a>
+                                                                                <button *ngIf="!action.onlyIcon" class="btn btn-sm" [ngClass]="action.inactiveClass" (click)="emitAction(action, eachItem,rowIndex)" [attr.disabled]="(action.disabled ||tableDataWithActions?.tableActions.disabled)? '': null">
+                                          {{action.inactiveLabel}} <i aria-hidden="true" class="fa"
+                                            [ngClass]="action.inactiveIcon"></i>
+                                        </button>
+                                                                            </ng-template>
+                                                                        </ng-container>
+                                                                        <ng-template #normalAction>
+                                                                            <a href="javascript:void(0)" class="label-action {{action.disabled || tableDataWithActions?.tableActions?.disabled? 'disabled': ''}}" [ngClass]="action.class" *ngIf="action.onlyIcon" [ngbTooltip]="action.label" container="body" (click)="emitAction(action, eachItem,rowIndex)">
+                                                                                <i aria-hidden="true" class="fa" [ngClass]="action.icon"></i></a>
+                                                                            <button *ngIf="!action.onlyIcon" class="btn btn-sm" [ngClass]="action.class" (click)="emitAction(action, eachItem,rowIndex)" [attr.disabled]="(action.disabled ||tableDataWithActions?.tableActions.disabled)? '': null">
+                                        {{action.label}} <i aria-hidden="true" class="fa" [ngClass]="action.icon"></i>
+                                      </button>
+                                                                        </ng-template>
+                                                                    </ng-container>
+                                                                    <ng-template #noIcon>
+                                                                        <span class="pc-4"></span>
+                                                                    </ng-template>
+                                                                </ng-container>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="tableDataWithActions?.tableActions?.showSerialNumber">
+                                                            <td class="table-coloum-serial-no-body text-center">
+                                                                <span>
+                                  {{(rowIndex + 1)+((metaData['counter'] - 1)*metaData['no_of_items_to_display'])}}
+                                </span>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container *ngFor="let eachHeader of tableDataWithActions['tableData']['headerContent']; let ind = index">
+
+
+
+                                                            <td class="row-item" class="table-cell-width" [ngClass]="[tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.alignCenter ? 'text-center' : '',
+                        tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.customColumnClass ? tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.customColumnClass : '']"
+                                                                [ngStyle]="{'background' : (tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.tdStyles?eachItem.color:''), 'color' : (tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.tdStyles ?eachItem.font:'')}">
+                                                                <ng-container *ngIf="!['check-box'].includes(eachHeader['type'])">
+                                                                    <ng-container *ngIf="(tableDataWithActions.clickableColumns && tableDataWithActions.clickableColumns.list && tableDataWithActions.clickableColumns.list.indexOf(eachHeader.key) > -1) then clickableCell else plainText">
+                                                                    </ng-container>
+                                                                    <ng-template #clickableCell>
+                                                                        <span class="clickable-element" [ngClass]="tableDataWithActions?.clickableColumns?.class" (click)="emitAction({'type': 'cellClick'}, eachItem,rowIndex, eachHeader['key'],'cellKey')">
+                                      {{eachItem[eachHeader['key']] }}</span>
+                                                                    </ng-template>
+                                                                    <ng-template #plainText>
+
+                                                                        <ng-container *ngIf="tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.innerHtml else normalText">
+                                                                            <span class="plain-text" [innerHtml]="eachItem[eachHeader['key']]"></span>
+                                                                        </ng-container>
+                                                                        <ng-template #normalText>
+                                                                            <span class="plain-text" [ngClass]="[tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.spanStyles ? 'status-colored' : '' , tableDataWithActions?.tableActions?.columnOptions && tableDataWithActions?.tableActions?.columnOptions[eachHeader.key]?.valueAsClass && eachItem && eachHeader['key'] && eachItem[eachHeader['key']] ? eachItem[eachHeader['key']] :'']">{{eachItem[eachHeader['key']] }}</span>
+                                                                        </ng-template>
+                                                                    </ng-template>
+                                                                </ng-container>
+                                                                <ng-container *ngIf="['check-box'].includes(eachHeader['type'])">
+                                                                    <input type="checkbox" name="check-box" class="check-mark" (change)="emitAction({'type': 'check-box-change'}, eachItem, rowIndex, $event)" [checked]="eachItem[eachHeader['key']]">
+                                                                </ng-container>
+                                                            </td>
+
+
+
+
+
+                                                        </ng-container>
+                                                    </tr>
+                                                </ng-container>
+                                            </ng-container>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+                <ng-container *ngIf="emptyTableNotify">
+                    <div class="empty-state" *ngIf="emptyTableNotify">
+                        <label class="records-available">No records to display</label><br>
+                    </div>
+                </ng-container>
+                <div *ngIf="!emptyTableNotify" class="row m-0 pagination-footer">
+                    <ng-container *ngIf="tableDataWithActions?.tableActions?.enableActions">
+                        <div class="col-md-6 p-0">
+                            <div class="d-flex dropdown text-muted">
+                                <div class="d-flex justify-content-between pt-1 pl-2 border-right" *ngIf="!tableDataWithActions?.tableActions?.itemsPerPage?.top">
+                                    <span class="pt-2">Items Per Page</span>
+                                    <ng-select name="typeofElement" [items]="metaData['display_options']" class="pl-4" placeholder="Select No of items to display" [clearable]="false" dropdownPosition="top" [(ngModel)]="metaData['no_of_items_to_display']" bindValue="value" bindLabel="label"
+                                        (ngModelChange)="onChangeInDisplay(metaData['no_of_items_to_display'])">
+                                    </ng-select>
+                                </div>
+                                <div class="d-flex justify-content-between pt-1 pl-3">
+                                    <span class="pt-2">
+                    <ng-container *ngIf="filteredData.length >0 else zeroShow">
+                      {{(metaData['counter'] - 1) * (metaData['no_of_items_to_display']) || 1 }}
+                    </ng-container>
+                    <ng-template #zeroShow>0 </ng-template>
+                    - {{getTotalPages()}}
+                    Items of {{filteredData.length}}
+                  </span>&nbsp;
+                                    <span *ngIf="filteredData.length < tableDataWithActions?.tableData?.bodyContent?.length" class="pt-2">
+                    ( filtered from {{tableDataWithActions.tableData.bodyContent.length}} Total Items )
+                  </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 p-0">
+                            <ng-container *ngIf="filteredData.length">
+                                <div class="pagination-div">
+                                    <ngb-pagination [collectionSize]="filteredData.length" [pageSize]="metaData.no_of_items_to_display" [(page)]="metaData.counter" [maxSize]="4" aria-label="Custom pagination">
+                                    </ngb-pagination>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>

@@ -1,0 +1,226 @@
+<div class="col-md-12 page-heading">
+    <h5> {{ vendorMasterId ? 'Update Vendor' : 'Add New Vendor' }}</h5>
+</div>
+<!-- form  autocomplete="off"  -->
+<form name="form" (ngSubmit)="f1.form.valid && submitForm()" #f1="ngForm">
+    <div class="page-inner px-3">
+        <div class="form-height p-10">
+            <div class="row">
+                <div class="coi-md-9 pl-2 pt-2">
+                    <h6>Vendor Details</h6>
+                </div>
+                <div class="col-md-12">
+                    <div class="row">
+                        <!--<div class="col-md-4">
+                            <div class="form-group">
+                                <label>Vendor Id <span class="mandatory">*</span></label>
+                                <input type="text" name="vendorId" class="form-control" [(ngModel)]="vendorDetails.vendorId" placeholder="Enter Vendor ID" [ngClass]="{'is-invalid': vendorId.invalid && vendorId.touched}" #vendorId="ngModel" [disabled]="vendorMasterId" required>
+                                <div *ngIf="vendorId.invalid && vendorId.touched && vendorId.errors.required" class="invalid-feedback">
+                                    <div>Vendor Id is required</div>
+                                </div>
+                            </div>
+                        </div> -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Vendor Name <span class="mandatory">*</span></label>
+                                <input type="text" name="vendorName" class="form-control"
+                                    [(ngModel)]="vendorDetails.vendorName" placeholder="Enter Vendor Name"
+                                    [ngClass]="{'is-invalid': vendorName.invalid && vendorName.touched}"
+                                    #vendorName="ngModel" required>
+                                <div *ngIf="vendorName.invalid && vendorName.touched && vendorName.errors.required"
+                                    class="invalid-feedback">
+                                    <div>Vendor Name is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>GST<span class="mandatory">*</span></label>
+                                <input type="text" name="contact gst" class="form-control"
+                                    [(ngModel)]="vendorDetails.vendorGstNo" placeholder="Enter GST"
+                                    [ngClass]="{'is-invalid': vendorGstNo.invalid && vendorGstNo.touched}"
+                                    #vendorGstNo="ngModel" required>
+                                <div *ngIf="vendorGstNo.invalid && vendorGstNo.errors.required"
+                                    class="invalid-feedback">
+                                    <div>GST is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Location/City <span class="mandatory">*</span></label>
+                                <input type="text" name="location" class="form-control"
+                                    [(ngModel)]="vendorDetails.location" placeholder="Enter Location"
+                                    [ngClass]="{'is-invalid': location.invalid && location.touched}" #location="ngModel"
+                                    required>
+                                <div *ngIf="location.invalid && location.errors.required" class="invalid-feedback">
+                                    <div>Location/City is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Vendor Address<span class="mandatory">*</span></label>
+                                <textarea type="text" name="address" rows="4" class="form-control"
+                                    [ngClass]="{'is-invalid': vendorAddress.invalid && vendorAddress.touched}"
+                                    #vendorAddress="ngModel" [(ngModel)]="vendorDetails.vendorAddress"
+                                    placeholder="Enter Vendor Address" required></textarea>
+                                <div *ngIf="vendorAddress.invalid && vendorAddress.errors.required"
+                                    class="invalid-feedback">
+                                    <div>Vendor Address is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Vendor Website</label>
+                                <input type="text" class="form-control" name="website"
+                                    [(ngModel)]="vendorDetails.website" placeholder="Enter Website" />
+                            </div>
+                        </div>
+                        <!-- <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Products<span class="mandatory">*</span></label>
+                                <ng-select placeholder="Select Products" [items]="productCode" bindLabel="label" [clearable]="true" [multiple]="true" class="select-control" bindValue="value" [(ngModel)]="vendorDetails.products" name="productList" required #productList="ngModel" [ngClass]="{'is-invalid': productList.invalid && productList.touched}">
+                                </ng-select>
+                                <div *ngIf="productList.invalid && productList.errors.required && productList.touched" class="invalid-feedbacks">
+                                    <div>Products is required</div>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>Products<span class="mandatory">*</span></label>
+                                <ng-select placeholder="Select Products" [items]="productCode" bindLabel="label"
+                                    [clearable]="true" [multiple]="true" class="select-control" bindValue="value"
+                                    [(ngModel)]="vendorDetails.products" name="productList" required
+                                    #productList="ngModel" [virtualScroll]="true"
+                                    [ngClass]="{'is-invalid': productList.invalid && productList.touched}">
+                                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                        <div class="ng-value" *ngFor="let item of items | slice:0:5">
+                                            <span class="ng-value-label">{{item.label}}</span>
+                                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                        </div>
+                                        <div class="ng-value" *ngIf="items.length > 5">
+                                            <span class="ng-value-label">{{items.length - 5}} more...</span>
+                                        </div>
+                                    </ng-template>
+                                </ng-select>
+                                <div *ngIf="productList.invalid && productList.errors.required && productList.touched"
+                                    class="invalid-feedbacks">
+                                    <div>Products is required</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- contact details -->
+
+                    <div class="row b-details">
+                        <div class="col-md-9">
+                            <h6>Contact Details</h6>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Contact Name <span class="mandatory">*</span></label>
+                                <input type="text" name="contact name" class="form-control"
+                                    [(ngModel)]="vendorDetails.contactName" placeholder="Enter Name"
+                                    #contactName="ngModel" [ngClass]="{'is-invalid': contactName.invalid && contactName.touched
+                            }" required>
+                                <div *ngIf="contactName.invalid && contactName.errors.required"
+                                    class="invalid-feedback">
+                                    <div>Contact Name is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- pattern="^([0|\+[0-9]{1,5})?([7-9][0-9]{9})$" -->
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Contact Number <span class="mandatory">*</span></label>
+                                <input type="text" name="contact number" class="form-control"
+                                    [(ngModel)]="vendorDetails.contactNo" maxlength="15"
+                                    (keypress)="textNumberOnly($event)" placeholder="Enter Contact Number"
+                                    [ngClass]="{'is-invalid': contactNo.invalid && contactNo.touched}"
+                                    #contactNo="ngModel" required>
+                                <div *ngIf="contactNo.touched && contactNo.invalid" class="invalid-feedback">
+                                    <!-- <div *ngIf="contactNo.errors.maxlength">Mobile cannot have more than 15 digits</div> -->
+                                    <div *ngIf="contactNo.errors.pattern">Mobile pattern wrong</div>
+                                    <div *ngIf="contactNo.errors.required">Contact Number is Required</div>
+
+                                </div>
+                                <div *ngIf="contactNo.invalid && (contactNo.dirty || contactNo.touched || contactNo.pristine)"
+                                    class="invalid-feedback">
+                                    <div *ngIf="contactNo.errors.maxlength">contact Number cannot have more than 15
+                                        digits</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Contact Email <span class="mandatory">*</span></label>
+                                <input type="text" name="emailId" class="form-control"
+                                    [(ngModel)]="vendorDetails.contactEmail"
+                                    [ngClass]="{'is-invalid': contactEmail.invalid && contactEmail.touched}"
+                                    (keypress)="avoidSpaceOnly($event)"
+                                    pattern='^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$'
+                                    placeholder="Enter Email" #contactEmail="ngModel" required>
+                                <div *ngIf="contactEmail.invalid && contactEmail.touched" class="invalid-feedback">
+                                    <div *ngIf="contactEmail.errors.required">Email is required</div>
+                                    <div *ngIf="contactEmail.errors.pattern">Email is invalid</div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row b-details">
+                <div class="col-md-9">
+                    <h6>Bank Details</h6>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Bank Name</label>
+                        <input type="text" name="bank name" class="form-control" [(ngModel)]="vendorDetails.bankName"
+                            placeholder="Enter Bank Name" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Account Name</label>
+                        <input type="text" name="account name" class="form-control"
+                            [(ngModel)]="vendorDetails.accountName" placeholder="Enter Account Name" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label> Account Number</label>
+                        <input type="text" name="account number" class="form-control"
+                            [(ngModel)]="vendorDetails.accountNo" placeholder="Enter Account Number" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>IFSC Code</label>
+                        <input type="text" name="account ifsc" class="form-control"
+                            [(ngModel)]="vendorDetails.accountIfsc" placeholder="Enter IFSC Code" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 btn-grp mt-2">
+            <button class="btn btn-secondary" (click)="cancel()">Cancel</button>
+            <button class="btn btn-primary ml-3" [disabled]="!f1.valid">Save</button>
+            <!-- [disabled]="!f1.valid" -->
+            <button class="btn btn-success ml-3" (click)="reset()">Reset</button>
+        </div>
+
+    </div>
+
+</form>

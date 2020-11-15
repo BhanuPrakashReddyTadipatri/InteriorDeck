@@ -1,0 +1,80 @@
+{
+    "status": true,
+    "message": "Success",
+    "data": {
+      "tableData": {
+        "headerContent": [
+            {
+                "key": "vendorName",
+                "label": "Vendor Name"
+              },
+              {
+                "key": "location",
+                "label": "location"
+              },
+              {
+                "key": "contactName",
+                "label": "Contact Name"
+              },
+              {
+                "key": "contactNumber",
+                "label": "Contact Number"
+              },
+              {
+                "key": "gstNumber",
+                "label": "GST Number"
+              },
+              {
+                "key": "createdBy",
+                "label": "Created By"
+              },
+              {
+                "key": "createdOn",
+                "label": "Created On"
+              }
+        ],
+        "bodyContent": [
+          {
+            "vendorID": "1234",
+            "vendorName": "aaaaa",
+            "location": "Bangalore",
+            "contactName": "29AAGCG8023N1Z4",
+            "contactNumber": "smita@knowledgelens.com",
+            "gstNumber": "AAGCG8023N",
+            "createdBy": "Mohan",
+            "createdOn": "Monday"
+          },
+          {
+            "vendorID": "1234",
+            "vendorName": "bbbb",
+            "location": "Chennai",
+            "contactName": "29AAFCK4119A1ZV",
+            "contactNumber": "smita@knowledgelens.com",
+            "gstNumber": "AAFCK4119A",
+            "createdBy": "Mohan",
+            "createdOn": "Monday"
+          },
+          {
+            "vendorID": "1234",
+            "vendorName": "cccc",
+            "location": "Andhra",
+            "contactName": "33AAGCG8023N1ZF",
+            "contactNumber": "smita@knowledgelens.com",
+            "gstNumber": "AAGCG8023N",
+            "createdBy": "jebby",
+            "createdOn": "Monday"
+          },
+          {
+            "vendorID": "1234",
+            "vendorName": "dddd",
+            "location": "Mumbai",
+            "contactName": "33AAFCK4119A1Z6",
+            "contactNumber": "smita@knowledgelens.com",
+            "gstNumber": "AAFCK4119A",
+            "createdBy": "Mohan",
+            "createdOn": "Sunday"
+          }
+        ]
+      }
+    }
+  }

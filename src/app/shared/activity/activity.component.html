@@ -1,0 +1,16 @@
+<ng-container>
+  <div class="ml-0">
+    <div *ngFor="let activity of activityFormatted">
+      <div class="col-md-12">
+        <strong>{{activity.dateFormated}}</strong>
+        <ol *ngFor="let item of activity.activities" class="activity-feed">
+          <li class="feed-item">
+            <span class="text d-block" [innerHtml]="item.activityLog">{{item.activityLog}}</span>
+            <span class="blue-color">{{item.changedBy}}</span> <br>
+            <span class="text">{{item.changedTime}}</span>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</ng-container>

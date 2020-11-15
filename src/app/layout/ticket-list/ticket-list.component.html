@@ -1,0 +1,131 @@
+<div class="col-md-12 row page-heading">
+  <div class="col-md-2 p-0 ticket-heading">
+    <h5>Tickets</h5>
+  </div>
+  <div class="col-md-9 show-tabs">
+    <div class="btn-group button_group" role="group" aria-label="Basic example" *ngIf="tabBtns?.length">
+      <ng-container *ngFor="let btnObj of tabBtns">
+        <button *ngIf="!btnObj.hide"
+          [ngClass]="ticketStatus.ticketStatus === btnObj.type ? 'btn btn-account btn-primary' : 'btn btn-account btn-secondary'"
+          (click)="changeTab(btnObj.type)"> {{btnObj.label}}
+          <span *ngIf="getCount(btnObj.type)>0" class="ml-1 new-ticket">{{getCount(btnObj.type)}}&nbsp;new</span>
+          <span *ngIf="getCount(btnObj.type)===0"
+            class="transparent new-ticket">{{getCount(btnObj.type)}}&nbsp;new</span>
+        </button>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="col-md-3 show-drpdwn">
+    <div ngbDropdown display="dynamic" placement="bottom-right">
+      <button class="btn btn-primary" id="dropdownAction" ngbDropdownToggle>
+        <span *ngIf="ticketStatus.ticketStatus === 'submitted'">Submitted</span>
+        <span *ngIf="ticketStatus.ticketStatus === 'waitingReadiness'">Waiting Readiness</span>
+        <span *ngIf="ticketStatus.ticketStatus === 'visitScheduled'">Visit Scheduled</span>
+        <span *ngIf="ticketStatus.ticketStatus === 'onSite'">On Site</span>
+        <span *ngIf="ticketStatus.ticketStatus === 'completed'">Completed</span>
+      </button>
+      <div ngbDropdownMenu aria-labelledby="dropdownAction">
+        <ng-container *ngFor="let ibtn of tabBtns">
+          <button *ngIf="!ibtn.hide" class="btn btn-basic"
+            [ngClass]="ticketStatus.ticketStatus === ibtn.type ? 'btn-primary' : 'btn-secondary'"
+            (click)="changeTab(ibtn.type)"> {{ibtn.label}}
+            <span *ngIf="getCount(ibtn.type)>0" class="ml-1 new-ticket">{{getCount(ibtn.type)}}&nbsp;new</span>
+            <span *ngIf="getCount(ibtn.type)===0" class="transparent new-ticket">{{getCount(ibtn.type)}}&nbsp;new</span>
+          </button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page-inner">
+
+  <app-simple-table-with-pagination *ngIf="ticketListTable?.tableData?.headerContent?.length > 0"
+    (actionEmitter)="handleTableEmitter($event);" [tableDataWithActions]="ticketListTable"
+    [tableReloadEvent]="tableReloadSubject.asObservable()">
+  </app-simple-table-with-pagination>
+
+</div>
+<!-- Confirmation Popup -->
+<app-confirmation-dialog *ngIf="showConfirmation" [confirmJson]="confirmJson"
+  (actionPerformed)="actionPerformed($event)"> </app-confirmation-dialog>
+
+
+<!-- LINK P.O POPUP: START -->
+<ng-template #linkPoPopup let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Link Purchase Order to Ticket</h5>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group" *ngIf="purchaseOrders">
+        <label class="weight-bold">Select P.O<span class="mandatory">*</span></label>
+        <ng-select placeholder="Select P.O" [items]="purchaseOrders.bodyContent" [clearable]="false" [multiple]="false"
+          bindLabel="poNumber" [(ngModel)]="selectedPO" appendTo="body" class="form-group-table-material">
+        </ng-select>
+      </div>
+      <div class="form-group">
+        <div class="row m-0 p-b-10" style="padding: 15px 0px 10px;" *ngIf="selectedPO">
+          <div class="col-12 p-l-0">
+            <table>
+              <thead></thead>
+              <tbody>
+                <tr>
+                  <td style="width: 30%;">
+                    <label class="col-12 ticket-label">Industry Type </label>
+                  </td>
+                  <td>
+                    <label
+                      class="col-12">{{selectedPO.clientName.industry ? selectedPO.clientName.industry : 'NA'}}</label>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width: 30%;">
+                    <label class="col-12 ticket-label">State </label>
+                  </td>
+                  <td>
+                    <label class="col-12">{{selectedPO.clientName.state ? selectedPO.clientName.state : 'NA'}}</label>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width: 30%;">
+                    <label class="col-12 ticket-label">District </label>
+                  </td>
+                  <td>
+                    <label
+                      class="col-12">{{selectedPO.clientName.district ? selectedPO.clientName.district : 'NA'}}</label>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width: 30%;">
+                    <label class="col-12 ticket-label">City </label>
+                  </td>
+                  <td>
+                    <label class="col-12">{{selectedPO.clientName.city ? selectedPO.clientName.city : 'NA'}}</label>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width: 30%;">
+                    <label class="col-12 ticket-label">P.O Created by </label>
+                  </td>
+                  <td>
+                    <label class="col-12">{{selectedPO.lastUpdatedBy ? selectedPO.lastUpdatedBy : 'NA'}}</label>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer p-0">
+      <button type="button" class="btn btn-secondary function-button" (click)="d('Cross click')">Cancel</button>
+      <button type="button" class="btn btn-primary function-button"
+        (click)="linkPurchaseOrder();d('Cross click')">Submit</button>
+    </div>
+  </div>
+</ng-template>
+<!-- LINK P.O POPUP: END -->

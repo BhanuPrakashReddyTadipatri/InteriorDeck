@@ -1,0 +1,144 @@
+<div class="col-md-12 page-heading">
+  <h5>{{receiptId ? 'Update Material Receipt' : 'Add New Material Receipt' }}</h5>
+</div>
+
+<div class="page-inner">
+  <form name="form" (ngSubmit)="f1.form.valid && confirmation()" #f1="ngForm" autocomplete="off">
+    <div class="row my-2 receipt-height">
+      <div class="col-md-12 p-0 m-b-4 form-height">
+        <div class="form-group card-form-height">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Vendor Name <span class="mandatory">*</span></label>
+                <ng-select placeholder="Select Vendor" [items]="selectedVendor" bindLabel="label" bindValue="value"
+                  [clearable]="false" class="select-control" [(ngModel)]="materialReceipt.vendorId" name="VendorList"
+                  required #vendorList="ngModel" (ngModelChange)=ondropdownChange()
+                  [disabled]="receiptViewMode || receiptId"
+                  [ngClass]="{'is-invalid': vendorList.invalid && vendorList.touched}">
+                </ng-select>
+                <!-- <div>{{materialReceipt}}</div> -->
+                <div *ngIf="vendorList.invalid && vendorList.touched" class="invalid-feedback">
+                  <div>Vendor ID is required</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="weight-bold">Purchase Date<span class="mandatory">*</span></label>
+              <input placeholder="Select date" class="form-control" [(ngModel)]="materialReceipt.purchaseDate"
+                [owlDateTimeTrigger]="dt4" [owlDateTime]="dt4" [max]="today" name="date" required #purchaseDate="ngModel"
+                [ngClass]="{'is-invalid': purchaseDate.invalid && purchaseDate.touched}" [disabled]="receiptViewMode" />
+              <span class="calender" [owlDateTimeTrigger]="dt4">
+                <i class="fa fa-calendar"></i>
+              </span>
+              <owl-date-time [pickerType]="'calendar'" #dt4></owl-date-time>
+              <div *ngIf="purchaseDate.invalid && purchaseDate.touched && purchaseDate.errors.required"
+                class="invalid-feedback">
+                <div>Purchase Date is required</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Status <span class="mandatory">*</span></label>
+                <ng-select placeholder="Select Status" [items]="selectedStatus" bindLabel="label" bindValue="value"
+                  [clearable]="false" class="select-control" [(ngModel)]="materialReceipt.status" name="status" required
+                  #status="ngModel" [ngClass]="{'is-invalid': status.invalid && status.touched}"
+                  [disabled]="receiptViewMode">
+                </ng-select>
+                <div *ngIf="status.invalid && status.touched" class="invalid-feedback">
+                  <div>Status is required</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row m-0 p-b-10" *ngIf="productList.length > 0">
+            <div class="col-md-9 pl-0">
+              <label class="weight-bold">Product List</label>
+              <div style="margin-top: 15px">
+                <div>
+                  <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-material">
+                      <thead>
+                        <tr>
+                          <th style="width: 45%">Product Name <span class="mandatory">*</span></th>
+                          <th style="width: 10%" class="text-align-center">Quantity <span class="mandatory">*</span></th>
+                          <th style="width: 15%" class="text-align-center">Price Per Item( &#x20B9; ) <span class="mandatory">*</span></th>
+                          <th style="width: 15%" class="text-align-center">Price( &#x20B9; )</th>
+                          <th style="width: 10%" *ngIf="!receiptViewMode"></th>
+                        </tr>
+                      </thead>
+                      <ng-container *ngFor=" let row of productList;let i = index">
+                        <tr>
+                          <td>
+                            <div *ngIf="!receiptViewMode">
+                              <!-- (ngModelChange)="selectMaterial(row, i)" -->
+                              <ng-select placeholder="Select Product" [items]="selectProduct" [clearable]="false"
+                                bindValue="materialCode" bindLabel="label" [(ngModel)]="row.materialCode"
+                                [disabled]="receiptViewMode" appendTo="body" (ngModelChange)="productChange(row,i)"
+                                name="{{row.materialCode}}" [ngModelOptions]="{standalone: true}" required>
+                              </ng-select>
+                            </div>
+                            <div *ngIf="receiptViewMode">
+                              {{row.materialCode}} - {{row.materialName}}
+                            </div>
+                          </td>
+                          <td>
+                            <div>
+                              <input type="number" class="form-group-table form-control text-align-center" [(ngModel)]="row.quantity"
+                                min="1" step="1" onkeypress="return !(event.charCode == 46 || event.charCode == 45 || event.charCode == 43)"
+                                [ngModelOptions]="{standalone: true}" name="prodQuantity" [disabled]="receiptViewMode"
+                                required (ngModelChange)="updatePrice(row);" />
+                            </div>
+                          </td>
+                          <td>
+                            <div>
+                              <input type="number" class="form-group-table form-control text-align-center" [(ngModel)]="row.price"
+                                [ngModelOptions]="{standalone: true}" #productPrice="ngModel" min="0" onkeypress="return !(event.charCode == 45)"
+                                [disabled]="receiptViewMode" name="prodPrice" required (ngModelChange)="updatePrice(row);" />
+                            </div>
+                          </td>
+                          <td class="text-align-center"> {{row.totalPrice}} </td>
+                          <td *ngIf="!receiptViewMode">
+                            <span class="display-inline-table" (click)="deleteMaterialRow(i)"
+                              *ngIf="productList.length > 1">
+                              <i class="far fa-trash-alt action-icon" aria-hidden="true"></i>
+                            </span>
+                            <span class="display-inline-table" *ngIf="i == 0" (click)="addMaterialRow(i)">
+                              <i class="fas fa-plus-circle action-icon" aria-hidden="true"></i>
+                            </span>
+                          </td>
+                        </tr>
+                      </ng-container>
+                      <tr class="total-row">
+                        <td>Grant Total</td>
+                        <td></td>
+                        <td></td>
+                        <td class="text-align-center"> {{materialReceipt.grantTotal}} </td>
+                        <td *ngIf="!receiptViewMode"></td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="col-md-12 mt-1 p-0 bottom-btn">
+        <button class="btn btn-secondary ml-2" (click)="goBack()">
+          {{ "Cancel" }}
+        </button>
+        <button class="btn btn-primary ml-2" *ngIf="!receiptViewMode" [disabled]="!f1.valid">
+          Submit
+        </button>
+      </div>
+    </div>
+  </form>
+
+</div>
+
+<!-- Confirmation Popup -->
+<app-confirmation-dialog *ngIf="showConfirmation" [confirmJson]="confirmJson"
+  (actionPerformed)="actionPerformed($event)"> </app-confirmation-dialog>

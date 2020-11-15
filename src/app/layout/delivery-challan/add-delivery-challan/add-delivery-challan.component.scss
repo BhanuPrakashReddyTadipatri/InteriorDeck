@@ -1,0 +1,13 @@
+button:disabled {
+    cursor: not-allowed;
+}
+
+.form-control:disabled, .form-control[readonly] {
+    cursor: not-allowed;
+}
+
+.form-height {
+    max-height: calc(100vh - 165px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}

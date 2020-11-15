@@ -1,0 +1,46 @@
+.challan-heading {
+    margin-top: 7px;
+}
+#myTab {
+    background: #f4f4f4;
+    border-radius: 7px 7px;
+    width: fit-content;
+    .active {
+        background: #2865dc !important;
+        color: #ffffff;
+        border-radius: 7px 7px;
+    }
+    .each-info-tab {
+        border-radius: 7px 7px;
+        font-family: "roboto-medium", Sans-serif;
+    }
+    .each-info-tab:hover {
+        // border-bottom: 3px solid lightgray;
+        color: #2865dc;
+    }
+}
+#innerTab {
+    .active {
+        border-bottom: 3px solid #4265dc !important;
+        font-weight: bold;
+  }
+  .inner-info-tab {
+        font-family: "roboto-medium", Sans-serif;
+        border-bottom: 3px solid #e0e0e0;
+  }
+  .inner-info-tab:hover {
+        // border-bottom: 3px solid lightgray;
+        color: #2865dc;
+  }
+}
+
+.empty-state {
+    text-align: center;
+    padding: 130px;
+    display: block;
+}
+.records-available {
+    color: lightgrey;
+    font-size: 25px !important;
+    font-size: 1.875rem !important;
+}

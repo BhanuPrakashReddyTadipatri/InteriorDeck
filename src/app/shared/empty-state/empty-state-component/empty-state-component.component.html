@@ -1,0 +1,30 @@
+<div class="emptyState">
+  <div *ngIf="emptyData" class="empty-data-container">
+    <div *ngIf="emptyData.image?.show" class="marginOne imageContainer">
+      <img [ngClass]="{'roundedImg': emptyData.image.rounded, 'classForGrid': emptyData?.options?.class === 'classForGrid' }"
+      src="{{emptyData.image.url}}" alt="empty" [style.width.px]="emptyData.image.width">
+    </div>
+    <div *ngIf="!emptyData.image?.show && emptyData.icon?.show" class="marginOne">
+      <span class="text-primary">
+        <em [ngClass]="emptyData.icon.class" aria-hidden="true"></em>
+      </span>
+    </div>
+    <div class="marginOne">
+      <h3> {{emptyData.title}} </h3>
+      <h5> {{emptyData.description}} </h5>
+    </div>
+    <div *ngIf="emptyData.action" id="buttonGroup" class="marginOne">
+      <button class="buttonClass btn" *ngFor="let b of emptyData.action"
+        [ngClass]="b.buttonClass? b.buttonClass:'btn-primary'" (click)="eventActionEmitter(b)" title="{{b.tooltip}}">
+        <em [ngClass]="b.iconClass"></em>{{b.buttonName}}
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="!emptyData" id="emptyInput">
+    <div class="marginOne">
+      <h3> No Result Found </h3>
+      <h5> Add some contents to view in this page </h5>
+    </div>
+  </div>
+</div>

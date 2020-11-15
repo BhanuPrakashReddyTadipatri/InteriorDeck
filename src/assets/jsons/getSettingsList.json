@@ -1,0 +1,35 @@
+{
+    "manager":[
+        {
+            "value": "Sites",
+            "icon": "fa-industry",
+            "route": "/sites-management",
+            "key": "sitesManagement"
+        },
+        {
+            "value": "Users",
+            "icon": "fa-users-cog",
+            "route": "/user-list",
+            "key": "activeUsers"
+        },
+        {
+            "value": "Company",
+            "icon": "fa-cog",
+            "route": "dc-config",
+            "key": "activeCompany"
+        },
+        {
+            "value": "Vendors",
+            "icon": "fa-users-cog",
+            "route": "vm-config",
+            "key": "activeVendor"
+        }
+    ],
+    "siteEngineer": [],
+    "sales": [],
+    "accounts": [],
+    "innovationLabUser": [],
+    "offshoreSupportEngineer": [],
+    "message":"Settings list fetched successfully",
+    "status": true
+}

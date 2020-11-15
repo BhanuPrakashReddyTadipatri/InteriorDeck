@@ -1,0 +1,48 @@
+{
+    "status": true,
+    "message": "Success",
+    "data": {
+      "Vendors": [
+        {
+          "value": "Site Issues",
+          "name": "Site Issues"
+        },
+        {
+          "value": "RC-Kit Installation",
+          "name": "RC-Kit Installation"
+        },
+        {
+          "value": "New Site Commissioning",
+          "name": "New Site Commissioning"
+        },
+        {
+          "value": "Remote Calibration",
+          "name": "Remote Calibration"
+        },
+        {
+          "value": "New Camera Connectivity",
+          "name": "New Camera Connectivity"
+        },
+        {
+          "value": "New Display Board Configuration",
+          "name": "New Display Board Configuration"
+        },
+        {
+          "value": "Training Related Visit",
+          "name": "Training Related Visit"
+        },
+        {
+          "value": "AMC Visit",
+          "name": "AMC Visit"
+        },
+        {
+          "value": "Old Site",
+          "name": "Old Site"
+        },
+        {
+          "value": "Other",
+          "name": "Other"
+        }
+      ]
+    }
+  }

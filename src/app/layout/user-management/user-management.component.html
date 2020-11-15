@@ -1,0 +1,178 @@
+<div class="col-md-12 page-heading">
+  <ng-container *ngIf="!viewMode">
+    <h5>{{ userDetails.userID ? 'Update User' : 'Add New User' }}</h5>
+  </ng-container>
+  <h5 *ngIf="viewMode">User Profile</h5>
+</div>
+
+
+<div class="page-inner">
+
+  <div class="row form-height">
+    <div class="col-md-10">
+      <div class="image-container col-12">
+        <img [src]="userDetails.profilePicture?userDetails.profilePicture:'assets/images/profileicon.png'"
+          alt="profileicon">
+        <label class="profile-name-display display-inline-block" style="margin-left:10px">{{userDetails.firstName}}
+          {{userDetails.lastName}}</label>
+
+      </div>
+      <a *ngIf="!viewMode" href="javascript:void(0);" class="link" (click)="openProfilePicUploadPopup()">
+        <i class="far fa-edit" aria-hidden="true"></i>
+        {{ userDetails.userID ? 'Update Profile Picture' : 'Add Profile Picture' }}
+      </a>
+      <div class="d-none">
+        <input (change)="onFileChange($event,'profilePicture')" id="profilePicture" type="file" name="componentFile"
+          class="form-control" placeholder="Please select file" accept="image/x-png,image/jpeg" />
+      </div>
+      <div class="row" style="margin-top:15px;">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>User ID <span class="mandatory">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="userDetails.userID" placeholder="Enter User ID"
+              [disabled]="actionType === 'edit' || actionType === 'view'" />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>First Name <span class="mandatory">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="userDetails.firstName"
+              placeholder="Enter First Name" />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Last Name <span class="mandatory">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="userDetails.lastName" placeholder="Enter Last Name" />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Password <span class="mandatory">*</span></label>
+            <input type="password" class="form-control" [(ngModel)]="userDetails.password"
+              placeholder="Enter password" />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Email <span class="mandatory">*</span></label>
+            <input type="email" class="form-control" [(ngModel)]="userDetails.email" placeholder="Enter email" />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Contact NO. <span class="mandatory">*</span></label>
+            <input type="number" class="form-control" [(ngModel)]="userDetails.contactNo"
+              placeholder="Enter Contact NO." />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Alternative Contact NO. </label>
+            <input type="number" class="form-control" [(ngModel)]="userDetails.alternateContactNo"
+              placeholder="Enter Alternative Contact NO." />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Emergency Contact NO. <span class="mandatory">*</span></label>
+            <input type="number" class="form-control" [(ngModel)]="userDetails.emergencyContactNo"
+              placeholder="Enter Emergency Contact NO." />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>User Role <span class="mandatory">*</span></label>
+            <ng-select placeholder="Select role" [items]="roleList" [clearable]="false" [multiple]="false"
+              [(ngModel)]="userDetails.userRole" appendTo="body" bindLabel="label" bindValue="value" [disabled]="klUserRole!=='manager'">
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>User Type <span class="mandatory">*</span></label>
+            <ng-select placeholder="Select type" [items]="typeList" [clearable]="false" [multiple]="false"
+              [(ngModel)]="userDetails.userType" appendTo="body">
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Location <span class="mandatory">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="userDetails.location" placeholder="Enter Location" />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Date Of Birth<span class="mandatory">*</span> </label>
+            <input placeholder="Select Date Of Birth" class="form-control" [(ngModel)]="userDetails.dateOfBirth"
+              [owlDateTimeTrigger]="dt1" [owlDateTime]="dt1">
+            <owl-date-time [pickerType]="'calendar'" [startView]="'multi-years'" #dt1></owl-date-time>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>ID Card Type <span class="mandatory">*</span></label>
+            <ng-select placeholder="Select ID Card Type" [items]="IdCardList" [clearable]="false" [multiple]="false"
+              [(ngModel)]="userDetails.idCardType" appendTo="body">
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>ID Card No. <span class="mandatory">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="userDetails.idCardCode"
+              placeholder="Enter ID Card NO." />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>ID Card Attachment <span class="mandatory">*</span></label>
+            <input type="file" accept="image/*, application/pdf" class="form-control"
+              (change)="onFileChange($event,'idCard')" placeholder="Enter ID Card NO." />
+          </div>
+          <a *ngIf="viewIdCard" href="JavaScript:void(0);" (click)="openIdCard()" class="m-l-1">
+            {{idcardLink?idcardLink:'View Attachment'}} </a>
+        </div>
+      </div>
+      <div>
+        <span class="mandatory">{{this.message}} </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div *ngIf="!viewMode" class="col-md-12 p-0"> -->
+  <div class="col-md-12 p-0">
+    <button class="btn btn-secondary" (click)="cancel()">Cancel</button>
+    <button *ngIf="actionType ==='edit' || actionType === 'new' || actionType ==='view' " class="btn btn-primary ml-3" (click)="addUser()"
+      [disabled]="validate()"> {{actionType ==='edit' || actionType ==='view'? 'Update':'Create'}}
+      User</button>
+  </div>
+
+
+</div>
+<!-- Preview-Popup -->
+<ng-template #updatePopUp let-c="close" let-d="dismiss">
+  <div class="modal-body modal-prop">
+    <div class="row">
+      <div class="col-md-12 p-l-0">
+        <div class="row m-b-15" *ngIf="encodedFile">
+          <div class="image-preview col-md-12 p-0">
+            <h6>Preview</h6>
+            <div class="preview-image text-center">
+              <img [src]="encodedFile" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer text-center">
+    <button *ngIf="profilePopup" class="btn btn-primary btn-sm" (click)="saveImage();d('Cross click')">
+      Save
+    </button>
+    <button class="btn btn-switch btn-sm m-0 m-l-5" (click)="d('Cross click')">
+      Cancel
+    </button>
+  </div>
+</ng-template>

@@ -1,0 +1,24 @@
+{
+    "status": true,
+    "message": "Success",
+    "data": {
+      "products": [
+        {
+          "value": "product 1",
+          "name": "product 1"
+        },
+        {
+          "value": "product 2",
+          "name": "product 2"
+        },
+        {
+          "value": "product 3",
+          "name": "product 3"
+        },
+        {
+          "value": "product 4",
+          "name": "product 4"
+        }
+      ]
+    }
+  }

@@ -1,0 +1,136 @@
+<div class="col-md-12 row page-heading">
+  <div class="col-md-3 p-0 material-heading">
+    <h5>Products</h5>
+  </div>
+</div>
+<div class="page-inner">
+  <app-simple-table-with-pagination *ngIf="ProductsTable?.tableData?.headerContent?.length > 0"
+    (actionEmitter)="handleTableEmitter($event);" [tableDataWithActions]="ProductsTable">
+  </app-simple-table-with-pagination>
+
+</div>
+
+<!-- Confirmation Popup -->
+<app-confirmation-dialog *ngIf="showConfirmation" [confirmJson]="confirmJson"
+  (actionPerformed)="actionPerformed($event)"> </app-confirmation-dialog>
+
+<!-- Edit Material: START -->
+<ng-template #productPopup let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <!-- <form #productForm="ngForm" name="form" (ngSubmit)="productForm.form.valid && saveProduct()" > -->
+    <form name="form" (ngSubmit)="f1.form.valid" #f1="ngForm">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"> {{ (!selectedProduct.new ? 'Update' : 'Add') + ' Product' }}
+        </h5>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Product Name<span class="mandatory">*</span></label>
+              <input type="text" placeholder="Enter Product Name" name="name" class="form-control" required
+                [ngClass]="{'is-invalid': prodName.invalid && prodName.touched}" #prodName="ngModel"
+                [(ngModel)]="selectedProduct.materialName" />
+              <div *ngIf="prodName.invalid && prodName.touched && prodName.errors.required" class="invalid-feedback">
+                <div>Product Name is required</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group" *ngIf="!selectedProduct.new">
+              <label>Product Code</label>
+              <input type="text" placeholder="Enter Code" [(ngModel)]="selectedProduct.materialCode"
+                class="form-control" name="code" #prodCode="ngModel" disabled/>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Product Make<span class="mandatory">*</span></label>
+              <input type="text" placeholder="Enter Product Make" [(ngModel)]="selectedProduct.materialMake"
+                class="form-control" name="make" [ngClass]="{'is-invalid': prodMake.invalid && prodMake.touched}"
+                required #prodMake="ngModel" />
+              <div *ngIf="prodMake.invalid && prodMake.touched && prodMake.errors.required" class="invalid-feedback">
+                <div>Product Make is required</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Product Model<span class="mandatory">*</span></label>
+              <input type="text" placeholder="Enter Product Model" [(ngModel)]="selectedProduct.materialModel"
+                class="form-control" name="model" [ngClass]="{'is-invalid': prodModel.invalid && prodModel.touched}"
+                required #prodModel="ngModel" />
+              <div *ngIf="prodModel.invalid && prodModel.touched && prodModel.errors.required" class="invalid-feedback">
+                <div>Product Model is required</div>
+              </div>
+
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Min Price<span class="mandatory">*</span></label>
+              <input type="number" placeholder="Enter Min Price" [(ngModel)]="selectedProduct.minPrice"
+                class="form-control" name="min" (blur)="valueCheck()"
+                [ngClass]="{'is-invalid': prodMin.invalid && prodMin.touched}" required #prodMin="ngModel" />
+              <div *ngIf="prodMin.invalid && prodMin.touched" class="invalid-feedback">
+                <div *ngIf="prodMin.errors.required">Minimum Price is required</div>
+              </div>
+              <div *ngIf="isvalueChecked" class="invalid-feedback">Min price should not be more than Max Price</div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Max Price<span class="mandatory">*</span></label>
+              <input type="number" placeholder="Enter Max Price" [(ngModel)]="selectedProduct.maxPrice" min="1"
+                class="form-control" name="max" (blur)="valueCheck()"
+                [ngClass]="{'is-invalid': prodMax.invalid && prodMax.touched}" #prodMax="ngModel" required />
+              <div *ngIf="prodMax.invalid && prodMax.touched" class="invalid-feedback">
+                <div *ngIf="prodMax.errors.required">Maximum Price is required</div>
+              </div>
+              <div *ngIf="isvalueChecked" class="invalid-feedback">Max price should not be less than Max Price</div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Device Type</label>
+              <ng-select placeholder="Device Type" [items]="deviceTypes" [clearable]="false" name="deviceType"
+                [multiple]="false" bindLabel="label" bindValue="value" [(ngModel)]="selectedProduct.deviceType"
+                class="form-group-table-material">
+              </ng-select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Warranty</label>
+              <input type="text" placeholder="Enter Warranty" [(ngModel)]="selectedProduct.warranty"
+                class="form-control" name="warranty" />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label>Specification</label>
+              <textarea class="form-control" rows="4" placeholder="Product Specification" name="spec"
+                [(ngModel)]="selectedProduct.specification" name="Specification">
+              </textarea>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn function-button btn-secondary" (click)="d('Cross click')">Cancel</button>
+        <button class="btn function-button btn-primary" type="submit" (click)="submitForm(f1) && d('Cross click')"
+          [disabled]="f1.invalid || isvalueChecked">Submit</button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+<!-- Edit Material: END -->

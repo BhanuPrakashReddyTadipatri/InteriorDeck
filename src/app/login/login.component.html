@@ -1,0 +1,52 @@
+<!-- .auth -->
+<main class="auth auth-floated">
+    <!-- .auth-announcement -->
+    <div id="announcement" class="auth-announcement" style="background-image: url(assets/images/login_back.jpg);">
+
+    </div>
+    <!-- /.auth-announcement -->
+    <!-- form -->
+    <form class="auth-form" autocomplete="off">
+        <div class="mb-4">
+            <div class="mb-3">
+                <label class="info">Log in to Execution Insights</label>
+            </div>
+        </div>
+
+        <ng-container>
+            <!-- .form-group -->
+            <div class="form-group mb-4">
+                <label class="d-block text-left">Username</label>
+                <input type="text" placeholder="Enter your username" [(ngModel)]="credentials['userID']" class="form-control" name="username" autofocus="">
+            </div>
+            <!-- /.form-group -->
+            <!-- .form-group -->
+            <div class="form-group mb-4">
+                <label class="d-block text-left">Password</label>
+                <input type="password" placeholder="Enter your password" [(ngModel)]="credentials['password']" class="form-control" name="password">
+            </div>
+            <!-- /.form-group -->
+            <!-- .form-group -->
+            <div class="form-group mb-4">
+                <button class="btn btn-primary ml-0 mt-3" type="submit" (click)="loginAccess($event)">Continue</button>
+            </div>
+            <!-- /.form-group -->
+            <!-- .form-group -->
+
+
+
+            <div>
+                <span class="mandatory">{{message}}</span>
+            </div>
+
+        </ng-container>
+
+        <div class="form-group pb-4 pt-4" style="border-top: 1px solid #dcdcdc;">
+            <div class="g-signin2 pl-xl-5" id="googleBtn"></div>
+        </div>
+
+    </form>
+    <!-- /.auth-form -->
+
+</main>
+<!-- /.auth -->

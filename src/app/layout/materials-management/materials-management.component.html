@@ -1,0 +1,137 @@
+<div class="col-md-12 row page-heading">
+    <div class="col-md-3 p-0 material-heading">
+      <h5> Inventory </h5>
+    </div>
+    <!-- <div class="col-md-6">
+      <div class="btn-group" role="group" aria-label="btn-heading">
+        <button
+          [ngClass]="ticketStatus.ticketStatus === 'Approved' ? 'btn btn-md btn-primary' : 'btn btn-md btn-secondary'"
+          (click)="changeTab('Approved')"> Approved
+        </button>
+        <button
+          [ngClass]="ticketStatus.ticketStatus === 'Unapproved' ? 'btn btn-md btn-primary' : 'btn btn-md btn-secondary'"
+          (click)="changeTab('Unapproved')"> Waiting Approval
+        </button>
+      </div>
+    </div> -->
+</div>
+
+<div class="page-inner">
+  <app-simple-table-with-pagination *ngIf="materialsTable?.tableData?.headerContent?.length > 0"
+    (actionEmitter)="handleTableEmitter($event);" [tableDataWithActions]="materialsTable"
+    [tableReloadEvent]="tableReloadSubject.asObservable()">
+  </app-simple-table-with-pagination>
+</div>
+
+<!-- Confirmation Popup -->
+<app-confirmation-dialog *ngIf="showConfirmation" [confirmJson]="confirmJson"
+  (actionPerformed)="actionPerformed($event)"> </app-confirmation-dialog>
+
+<!-- Edit Material: START -->
+<ng-template #manageMaterialPopup let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Update Inventory</h5>
+      <!-- <h5 class="modal-title" id="exampleModalLabel">{{ (!selectedMaterial.new ? 'Update' : 'Add') + ' Inventory' }}</h5> -->
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row m-0">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Product Name<span class="mandatory">*</span></label>
+            <input type="text" placeholder="Enter Product Name" [(ngModel)]="selectedMaterial.materialName"
+              class="form-control" disabled />
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Product Code<span class="mandatory">*</span></label>
+            <input type="text" placeholder="Enter Product Code" [(ngModel)]="selectedMaterial.materialCode" class="form-control"
+              disabled />
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Product Make</label>
+            <input type="text" placeholder="Enter Product Make" [(ngModel)]="selectedMaterial.materialMake" class="form-control"
+              disabled />
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Product Model</label>
+            <input type="text" placeholder="Enter Product Model" [(ngModel)]="selectedMaterial.materialModel" class="form-control"
+              disabled />
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Quantity<span class="mandatory">*</span></label>
+            <input type="number" placeholder="Enter Quantity" [(ngModel)]="selectedMaterial.quantity"
+              class="form-control" [min]="0" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer p-0">
+      <button type="button" class="btn function-button btn-secondary" (click)="d('Cross click')">Cancel</button>
+      <button type="button" class="btn function-button btn-primary"
+        [disabled]="!selectedMaterial.materialName  || selectedMaterial.quantity === null || !selectedMaterial.materialCode"
+        (click)="saveMaterial();d('Cross click')">Submit</button>
+    </div>
+  </div>
+</ng-template>
+<!-- Edit Material: END -->
+
+<!-- Product Inventory Details: START -->
+<ng-template #productInventoryDetailsPopup let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Product Inventory Details</h5>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row m-0 pb-1 mb-3 border-bottom">
+        <div class="col-md-4">
+          <label for="" class="label-text"> Product Name: {{prodDetails.materialName}} </label>
+        </div>
+        <div class="col-md-4">
+          <label for="" class="label-text"> Initial Stock: {{prodDetails.initialStock}} </label>
+        </div>
+        <div class="col-md-4">
+          <label for="" class="label-text"> Current Stock: {{prodDetails.currentStock}} </label>
+        </div>
+      </div>
+      <div class="row m-0 table-container">
+        <div class="w-100">
+          <div class="table-scroll">
+            <table class="table table-bordered table-sm custom-table-sm">
+                <thead>
+                    <tr>
+                        <th *ngFor="let head of prodDetails.tableData.headerContent;" [ngClass]="{'text-align-center': head.key === 'quantityChange'}">{{head.label}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let eachRow of prodDetails.tableData.bodyContent; let i = index">
+                      <td class="" *ngFor="let head of prodDetails.tableData.headerContent;" [ngClass]="{'text-align-center': head.key === 'quantityChange'}">
+                        {{eachRow[head['key']]}}
+                      </td>
+                    </tr>
+                </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer p-0">
+      <button type="button" class="btn function-button function-btn-full btn-primary"
+      style="width: 100% !important;" (click)="d('Cross click')">OK</button>
+    </div>
+  </div>
+</ng-template>
+<!-- Product Inventory Details: END -->

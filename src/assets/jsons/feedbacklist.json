@@ -1,0 +1,114 @@
+{
+    "status": true,
+    "message": "Feedbacks",
+    "data":[
+        {
+            "categoryList": "Travel",
+            "subject":"Test",
+            "description":"Cards are built with as little markup and styles as possible but still manage to deliver a bunch of control and customization. Built with flexbox, they offer easy alignment and mix well with other Bootstrap components. Cards have no margins by default, so use spacing utilities as needed. They have no fixed width to start, so they’ll fill the full width of its parent.",
+            "feedbackby":"Perumal",
+            "issues":"Testing Issue",
+            "suggestions":"Suggestion 1",
+            "rating":4
+        },
+        {
+            "categoryList": "Site",
+            "subject":"Test 2",
+            "description":"Testing",
+            "feedbackby":"Thanoj",
+            "issues":"",
+            "suggestions":"Suggestions 2",
+            "rating":3
+        },
+        {
+            "categoryList": "Others",
+            "subject":"Test 3",
+            "description":"Testing",
+            "feedbackby":"Bibin",
+            "issues":"Testing Issue 3",
+            "suggestions":"",
+            "rating":4
+        },
+        {
+            "categoryList": "Travel",
+            "subject":"Test",
+            "description":"Testing the project",
+            "feedbackby":"Perumal",
+            "issues":"",
+            "suggestions":"",
+            "rating":5
+        },
+        {
+            "categoryList": "Others",
+            "subject":"Test 2",
+            "description":"Testing",
+            "feedbackby":"Thanoj",
+            "issues":"",
+            "suggestions":"Testing  2",
+            "rating":2
+        },
+        {
+            "categoryList": "Site",
+            "subject":"Test 3",
+            "description":"Testing",
+            "feedbackby":"Bibin",
+            "issues":"",
+            "suggestions":"",
+            "rating":1
+        },
+        {
+            "categoryList": "Others",
+            "subject":"Test",
+            "description":"Testing the project",
+            "feedbackby":"Perumal",
+            "issues":"",
+            "suggestions":"",
+            "rating":5
+        },
+        {
+            "categoryList": "Site",
+            "subject":"Test 2",
+            "description":"Testing",
+            "feedbackby":"Thanoj",
+            "issues":"",
+            "suggestions":"",
+            "rating":4
+        },
+        {
+            "categoryList": "Site",
+            "subject":"Test 3",
+            "description":"Testing",
+            "feedbackby":"Bibin",
+            "issues":"",
+            "suggestions":"",
+            "rating":3
+        },
+        {
+            "categoryList": "Travel",
+            "subject":"Test",
+            "description":"Testing the project",
+            "feedbackby":"Perumal",
+            "issues":"",
+            "suggestions":"",
+            "rating":5
+        },
+        {
+            "categoryList": "Others",
+            "subject":"Test 2",
+            "description":"Testing",
+            "feedbackby":"Thanoj",
+            "issues":"",
+            "suggestions":"Testing 3",
+            "rating":2
+        },
+        {
+            "categoryList": "Site",
+            "subject":"Test 3",
+            "description":"Testing",
+            "feedbackby":"Bibin",
+            "issues":"",
+            "suggestions":"",
+            "rating":4
+        }
+    ]
+}

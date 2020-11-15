@@ -1,0 +1,39 @@
+.btn-export-excel{
+    float: right;
+    margin: 6px 6px;
+    height: 2rem;
+}
+
+.icon-spacing {
+    margin-right: 2rem;
+}
+
+.float-right {
+    float: right;
+    margin-top: 0.35rem;
+}
+
+.show-tabs {
+    display: block;
+}
+
+.show-drpdwn {
+    display: none;
+}
+
+@media only screen and (max-width: 1280px){
+    .show-drpdwn{
+        display: block;
+    }
+    .show-tabs{
+      display: none;
+    }
+}
+
+.btn-basic {
+    width: 100%;
+}
+
+.ticket-heading {
+    margin-top: 7px;
+}

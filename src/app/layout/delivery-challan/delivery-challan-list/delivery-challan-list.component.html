@@ -1,0 +1,111 @@
+<div class="col-md-12 row page-heading">
+  <div class="col-md-3 p-0 challan-heading">
+    <h5> Challans </h5>
+  </div>
+  <div class="col-md-8">
+    <div class="btn-group" role="group" aria-label="btn-heading">
+      <button [ngClass]="activeTab === 'deliveryChallan' ? 'btn btn-md btn-primary' : 'btn btn-md btn-secondary'"
+        (click)="changeMainTab('deliveryChallan')">Delivery Challan</button>
+      <button [ngClass]="activeTab === 'deliveryChallanDetails' ? 'btn btn-md btn-primary' : 'btn btn-md btn-secondary'"
+        (click)="changeMainTab('deliveryChallanDetails')">Delivery Challan Details</button>
+      <button [ngClass]="activeTab === 'dispatchDetails' ? 'btn btn-md btn-primary' : 'btn btn-md btn-secondary'"
+        (click)="changeMainTab('dispatchDetails')">Dispatch Details</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="page-inner">
+
+  <ng-container *ngIf="activeTab === 'deliveryChallan'">
+    <div class="col-md-12 p-0 pb-3">
+      <ul class="nav" id="innerTab" role="tablist">
+        <li class="nav-item inner-info-tab cursor-pointer" (click)="changeTab('Active');"
+          [ngClass]="{'active': dcStatus === 'Active'}">
+          <a class="nav-link">Active</a>
+        </li>
+        <li class="nav-item inner-info-tab cursor-pointer" (click)="changeTab('Approved');"
+          [ngClass]="{'active': dcStatus === 'Approved'}">
+          <a class="nav-link ">Approved</a>
+        </li>
+      </ul>
+    </div>
+    <app-simple-table-with-pagination *ngIf="deliveryChallanTable?.tableData?.headerContent?.length > 0 && !showEmptyData"
+      (actionEmitter)="handleTableEmitter($event);" [tableDataWithActions]="deliveryChallanTable"
+      [tableReloadEvent]="tableReloadSubject.asObservable()">
+    </app-simple-table-with-pagination>
+  </ng-container>
+
+  <ng-container *ngIf="activeTab === 'deliveryChallanDetails'">
+    <app-simple-table-with-pagination *ngIf="deliveryChallanDetailsTable?.tableData?.headerContent?.length > 0 && !showEmptyData"
+      (actionEmitter)="handleTableEmitter($event);" [tableDataWithActions]="deliveryChallanDetailsTable"
+      [tableReloadEvent]="tableDCDetailsReloadSubject.asObservable()">
+    </app-simple-table-with-pagination>
+  </ng-container>
+
+  <ng-container *ngIf="activeTab === 'dispatchDetails'">
+    <app-simple-table-with-pagination *ngIf="dispatchDetailsChallanTable?.tableData?.headerContent?.length > 0 && !showEmptyData"
+      (actionEmitter)="handleTableEmitter($event);" [tableDataWithActions]="dispatchDetailsChallanTable"
+      [tableReloadEvent]="tableDispatchReloadSubject.asObservable()">
+    </app-simple-table-with-pagination>
+  </ng-container>
+
+  <ng-container *ngIf="showEmptyData">
+    <div class="empty-state">
+      <label class="records-available">No data available to show in this page. Please reload the page...</label><br>
+  </div>
+  </ng-container>
+
+</div>
+
+<!-- Confirmation -->
+<app-confirmation-dialog *ngIf="showConfirmation" [confirmJson]="confirmJson"
+  (actionPerformed)="actionPerformed($event)"> </app-confirmation-dialog>
+<!-- Ends Confirmation -->
+
+<!-- Export: START -->
+<ng-template #exportPopup let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Export</h5>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row" style="height: 10rem;">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="weight-bold">Field<span class="mandatory">*</span></label>
+            <ng-select placeholder="Select Field..." [items]="fieldList" [clearable]="false"
+            bindLabel="label" bindValue="key" [multiple]="false" class="list-form" [(ngModel)]="exportDetails.field">
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="weight-bold">Start Date<span class="mandatory">*</span></label>
+                <input placeholder="Select Start date" class="form-control" [(ngModel)]="exportDetails.startDate"
+                (ngModelChange)="endDateValidation();" [owlDateTimeTrigger]="dt_startDate" [owlDateTime]="dt_startDate">
+                <owl-date-time [pickerType]="'calendar'" #dt_startDate></owl-date-time>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="weight-bold">End Date<span class="mandatory">*</span></label>
+                <input placeholder="Select End date" class="form-control" [(ngModel)]="exportDetails.endDate"
+                [min]="exportDetails.startDate" [owlDateTimeTrigger]="dt_endDate" [owlDateTime]="dt_endDate">
+                <owl-date-time [pickerType]="'calendar'" #dt_endDate></owl-date-time>
+            </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer p-0">
+      <button type="button" class="btn function-button btn-secondary" (click)="d('Cross click')">Cancel</button>
+      <button type="button" class="btn function-button btn-primary"
+        [disabled]="!exportDetails.field || !exportDetails.startDate || !exportDetails.endDate"
+        (click)="exportDataPost();d('Cross click')">Export</button>
+    </div>
+  </div>
+</ng-template>
+<!-- Export: END -->

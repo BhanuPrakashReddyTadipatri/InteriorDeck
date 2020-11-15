@@ -1,0 +1,42 @@
+.btn-export-excel {
+    float: right;
+    margin: 6px 6px;
+    height: 2rem;
+}
+
+.icon-spacing {
+    margin-right: 2rem;
+}
+
+.card-form {
+    padding: 20px 30px !important;
+    border-radius: 5px !important;
+    table tr td {
+        padding-bottom: 15px;
+    }
+}
+
+.card-form-height {
+    max-height: calc(100vh - 230px);
+    overflow-y: auto;
+}
+
+.active-btn {
+    background: 0 0;
+    border: none;
+    border-bottom: 3px solid #2865dc;
+    color: #161617;
+    font-size: 15px;
+}
+
+.inactive-btn {
+    background: 0 0;
+    border: none;
+    border-bottom: 3px solid #d6d6d6;
+    color: #6d6065;
+}
+.indication {
+    color: #888c9b;
+    padding-top: 5px;
+    padding-left: .75rem;
+}

@@ -1,0 +1,39 @@
+  .blue-color {
+    color: #4f9aff;
+    padding-top: 5px !important;
+  }
+ 
+  .activity-feed {
+    padding-left: 1.5rem;
+    padding-top: 0.5rem;
+    list-style: none;
+    margin-bottom: 0;
+  
+    .feed-item {
+      position: relative;
+      padding-left: 1rem;
+      padding-bottom: 0.5rem;
+      border-left: 1px solid grey !important;
+  
+      &:last-child {
+        border-color: transparent;
+      }
+  
+      &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: -6px;
+        width: 10px;
+        height: 10px;
+        border-radius: 6px;
+        background: black;
+        border: 1px solid black;
+      }
+      .text {
+        position: relative;
+        top: -3px;
+      }
+    }
+  }

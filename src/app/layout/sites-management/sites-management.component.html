@@ -1,0 +1,70 @@
+<div class="col-md-12 page-heading">
+  <h5>Sites Setup</h5>
+</div>
+
+<div class="page-inner">
+
+  <app-simple-table-with-pagination *ngIf="sitesTable?.tableData?.headerContent?.length > 0"
+    (actionEmitter)="handleTableEmitter($event);" [tableDataWithActions]="sitesTable"
+    [tableReloadEvent]="tableReloadSubject.asObservable()">
+  </app-simple-table-with-pagination>
+
+
+</div>
+<!-- Confirmation Popup -->
+<app-confirmation-dialog *ngIf="showConfirmation" [confirmJson]="confirmJson"
+  (actionPerformed)="actionPerformed($event)"> </app-confirmation-dialog>
+
+<!-- Edit Site: START -->
+<ng-template #manageSitePopup let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">{{ (selectedSite.siteId ? 'Update' : 'Add') + ' Site' }}</h5>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="weight-bold">Site name<span class="mandatory">*</span></label>
+        <input type="text" placeholder="Enter site name" [(ngModel)]="selectedSite.siteName" class="form-control">
+      </div>
+      <div class="form-group">
+        <label class="weight-bold">Industry Type<span class="mandatory">*</span></label>
+        <input type="text" placeholder="Eg. Sugar, Textile,.." [(ngModel)]="selectedSite.industry" class="form-control">
+      </div>
+      <div class="form-group">
+        <label class="weight-bold">Country<span class="mandatory">*</span></label>
+        <ng-select placeholder="Select country..." [items]="countryList" [clearable]="false" [multiple]="false"
+          class="list-form" [(ngModel)]="selectedSite.country" (ngModelChange)="selectCountry($event)">
+        </ng-select>
+      </div>
+      <div class="form-group">
+        <label class="weight-bold">State<span class="mandatory">*</span></label>
+        <ng-select placeholder="Select state..." [items]="stateList" [clearable]="false" [multiple]="false"
+          class="list-form" [(ngModel)]="selectedSite.state" (ngModelChange)="selectState($event)" [virtualScroll]="true">
+        </ng-select>
+      </div>
+      <div class="form-group">
+        <label class="weight-bold">District<span class="mandatory">*</span></label>
+        <ng-select placeholder="Select district..." [items]="districtList" [clearable]="false" [multiple]="false"
+          class="list-form" [(ngModel)]="selectedSite.district" [disabled]="selectedSite.state === null"
+          [addTag]="selectedSite.country!='India'" [virtualScroll]="true">
+          <ng-template *ngIf="selectedSite.country!='India'" ng-tag-tmp let-search="searchTerm">
+            Add district<b> {{search}}</b>
+          </ng-template>
+        </ng-select>
+      </div>
+      <div class="form-group">
+        <label class="weight-bold">Region/City<span class="mandatory">*</span></label>
+        <input class="form-control" type="text" placeholder="Region/City" [(ngModel)]="selectedSite.city">
+      </div>
+    </div>
+    <div class="modal-footer p-0">
+      <button type="button" class="btn btn-secondary function-button" (click)="d('Cross click')">Cancel</button>
+      <button type="button" class="btn btn-primary function-button" (click)="saveSite();d('Cross click')"
+        [disabled]="!selectedSite.siteName || !selectedSite.state || !selectedSite.district || !selectedSite.city">Submit</button>
+    </div>
+  </div>
+</ng-template>
+<!-- Edit Site: END -->

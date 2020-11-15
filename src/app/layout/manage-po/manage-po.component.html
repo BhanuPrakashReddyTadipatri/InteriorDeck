@@ -1,0 +1,587 @@
+<div class="page-inner">
+    <div class="row mt-2">
+        <div class="col-md-6">
+            <!-- <div class="btn-group mb-2" role="group" aria-label="btn-heading">
+                <button [ngClass]="activeTab === 'poDetails' ? 'btn btn-md btn-primary' : 'btn btn-md btn-secondary'" (click)="changeTab('poDetails')">PO Details</button>
+                <ng-container *ngIf="purchaseOrderId">
+                    <button [ngClass]="activeTab === 'ticketList' ? 'btn btn-md btn-primary' : 'btn btn-md btn-secondary'" (click)="changeTab('ticketList')">Tickets</button>
+                </ng-container>
+            </div> -->
+
+            <div class="col-md-12 p-0 mb-2">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button [ngClass]="activeTab === 'poDetails' ? 'btn active-btn' : 'btn inactive-btn'"
+                        (click)="changeTab('poDetails')">PO Details </button>
+                    <button [ngClass]="activeTab === 'ticketList' ? 'btn active-btn' : 'btn inactive-btn'"
+                        (click)="changeTab('ticketList')">Tickets </button>
+                    <button [ngClass]="activeTab === 'challanDetails' ? 'btn active-btn' : 'btn inactive-btn'"
+                        (click)="changeTab('challanDetails')" *ngIf="purchaseOrderId"> Challan Details </button>
+                    <button [ngClass]="activeTab === 'auditTab' ? 'btn active-btn' : 'btn inactive-btn'"
+                        (click)="changeTab('auditTab')">Audit </button>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-6 text-right" *ngIf="activeTab === 'ticketList'">
+            <button class="btn btn-primary float-right" (click)="createTicket()"><i aria-hidden="true"
+                    class="fa fa-plus"></i>
+                Create Ticket</button>
+            <button class="btn btn-primary float-right mr-3" (click)="exportToExcel()"><i aria-hidden="true"
+                    class="fa fa-file-excel"></i> Download</button>
+            <input type="text" class="table-search mt-0 mr-3" [(ngModel)]="filterTickets" placeholder="Search..." />
+        </div>
+    </div>
+    <div class="row m-0" *ngIf="activeTab === 'poDetails'">
+        <div class="col-md-12 card card-form m-b-4">
+            <div class="form-group card-form-height">
+                <div class="row m-0 p-b-10">
+                    <div class="col-md-3">
+                        <label class="weight-bold">PO Type<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-md-9">
+                        <ng-select placeholder="Select PO Type..." [items]="POTypes" [clearable]="false"
+                            bindLabel="label" bindValue="value" [multiple]="false" class="list-form"
+                            [(ngModel)]="selectedPoType" [disabled]="disableField">
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="row m-0 p-b-10" *ngIf="selectedPoType === 'inwardDC'">
+                    <div class="col-md-3">
+                        <label class="weight-bold">Inward Delivery Challan<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-md-4">
+                        <ng-select placeholder="Select Type..." [items]="inwardDCTypes" [clearable]="false"
+                            bindLabel="label" bindValue="value" [multiple]="false" class="list-form"
+                            [(ngModel)]="poForm.inwardDCType" [disabled]="disableField"
+                            (ngModelChange)="changeInwardDCType($event)">
+                        </ng-select>
+                    </div>
+                    <div class="col-md-5">
+                        <span *ngIf="inwardPoInfo"><i class="fa fa-info-circle mt-2" aria-hidden="true"></i>
+                            {{ inwardPoInfo }}</span>
+                    </div>
+                </div>
+                <div class="row m-0 p-b-10" *ngIf="selectedPoType === 'outwardDC'">
+                    <div class="col-md-3">
+                        <label class="weight-bold">Outward Delivery Challan<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-md-4">
+                        <ng-select placeholder="Select Type..." [items]="outwardDCTypes" [clearable]="false"
+                            bindLabel="label" bindValue="value" [multiple]="false" class="list-form"
+                            [(ngModel)]="poForm.outwardDCType" [disabled]="disableField"
+                            (ngModelChange)="changeOutwardDCType($event)">
+                        </ng-select>
+                    </div>
+                    <div class="col-md-5">
+                        <span *ngIf="outwardPoInfo"><i class="fa fa-info-circle mt-2" aria-hidden="true"></i>
+                            {{ outwardPoInfo }}</span>
+                    </div>
+                </div>
+                <div class="row m-0 p-b-10">
+                    <div class="col-md-3">
+                        <label class="weight-bold">Client Name<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-md-9">
+                        <ng-select placeholder="Select Client..." [items]="siteList" [clearable]="false"
+                            bindLabel="siteName" [multiple]="false" class="list-form" [(ngModel)]="poForm.clientName"
+                            [disabled]="disableField" [virtualScroll]="true">
+                        </ng-select>
+                        <div class="row m-0 p-b-10" style="padding: 15px 0px 10px;" *ngIf="poForm.clientName">
+                            <div class="col-3 p-l-0 display-inline-block ticket-detail-padding">
+                                <label class="col-12 ticket-label">Industry Type </label>
+                                <label
+                                    class="col-12">{{poForm.clientName.industry ? poForm.clientName.industry : 'NA'}}</label>
+                            </div>
+                            <div class="col-3 p-l-0 display-inline-block ticket-detail-padding">
+                                <label class="col-12 ticket-label">State </label>
+                                <label
+                                    class="col-12">{{poForm.clientName.state ? poForm.clientName.state : 'NA'}}</label>
+                            </div>
+                            <div class="col-3 p-l-0 display-inline-block ticket-detail-padding">
+                                <label class="col-12 ticket-label">District </label>
+                                <label
+                                    class="col-12">{{poForm.clientName.district ? poForm.clientName.district : 'NA'}}</label>
+                            </div>
+                            <div class="col-3 p-l-0 display-inline-block ticket-detail-padding">
+                                <label class="col-12 ticket-label">City </label>
+                                <label class="col-12">{{poForm.clientName.city ? poForm.clientName.city : 'NA'}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row m-0 p-b-10">
+                    <div class="col-md-3">
+                        <label class="weight-bold">Name<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" placeholder="Enter Name" [(ngModel)]="poForm.contactPerson"
+                            class="form-control" [disabled]="disableField">
+                    </div>
+                </div>
+                <div class="row m-0 p-b-10">
+                    <div class="col-md-3">
+                        <label class="weight-bold">Contact Number<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-md-9">
+                        <input type="number" placeholder="Enter Contact Number" [(ngModel)]="poForm.contactNumber"
+                            class="form-control" [disabled]="disableField">
+                    </div>
+                </div>
+                <div class="row m-0 p-b-10">
+                    <div class="col-md-3">
+                        <label class="weight-bold">Email ID<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" placeholder="Enter Email ID" [(ngModel)]="poForm.email" class="form-control"
+                            [disabled]="disableField">
+                    </div>
+                </div>
+                <div class="row m-0 p-b-10">
+                    <div class="col-md-3">
+                        <label class="weight-bold">P.O Number<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" placeholder="Enter P.O Number" [(ngModel)]="poForm.poNumber"
+                            class="form-control" [disabled]="purchaseOrderId || disableField">
+                    </div>
+                </div>
+                <div class="row m-0 p-b-10">
+                    <div class="col-md-3">
+                        <label class="weight-bold">Payment Terms</label>
+                    </div>
+                    <div class="col-md-9">
+                        <textarea class="form-group form-control" rows="3" placeholder="Payment Terms"
+                            [(ngModel)]="poForm.paymentTerms" [disabled]="disableField"></textarea>
+                    </div>
+                </div>
+                <div class="row m-0 p-b-10">
+                    <div class="col-md-3">
+                        <label class="weight-bold">P.O Date<span class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" placeholder="Enter P.O Date" [(ngModel)]="poForm.poDate" id="poDate"
+                            (blur)="validateDate(poForm.poDate, 'P.O Date')" class="form-control"
+                            [disabled]="disableField">
+                        <label for="" class="indication">Valid date formats are DD-MM-YYYY or DD/MM/YYYY</label>
+                    </div>
+                </div>
+                <div class="row m-0 p-b-10">
+                    <div class="col-md-3">
+                        <label class="weight-bold">P.O Received Date<span *ngIf="!hideMandatory"
+                                class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" placeholder="Enter P.O Received date" [(ngModel)]="poForm.poReceivedDate"
+                            id="poRDate" (blur)="validateDate(poForm.poReceivedDate, 'P.O Received date')"
+                            class="form-control" [disabled]="disableField">
+                        <label for="" class="indication">Valid date formats are DD-MM-YYYY or DD/MM/YYYY</label>
+                    </div>
+                </div>
+                <div class="row m-0 p-b-10">
+                    <div class="col-md-3">
+                        <label class="weight-bold">EMD / Bank Guarantee<span *ngIf="!hideMandatory"
+                                class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-md-9">
+                        <ng-select placeholder="Select Guarantee..." [items]="guatanteeItems" [clearable]="false"
+                            bindLabel="label" bindValue="value" [multiple]="false" class="list-form"
+                            [(ngModel)]="poForm.guarantee" [disabled]="disableField">
+                        </ng-select>
+                    </div>
+                </div>
+                <ng-container *ngIf="poForm.guarantee === 'EMD'">
+                    <div class="row m-0 p-b-10">
+                        <div class="col-md-3">
+                            <label class="weight-bold">Amount<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" placeholder="Enter Amount" [(ngModel)]="poForm.emdAmount"
+                                class="form-control" [disabled]="disableField">
+                        </div>
+                    </div>
+                    <div class="row m-0 p-b-10">
+                        <div class="col-md-3">
+                            <label class="weight-bold">EMD Dispatch Date<span *ngIf="!hideMandatory"
+                                    class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-md-9">
+                            <input placeholder="Select Dispatch date" class="form-control" [(ngModel)]="poForm.emdDate"
+                                [owlDateTimeTrigger]="dt4" [owlDateTime]="dt4" [disabled]="disableField">
+                            <owl-date-time [pickerType]="'calendar'" #dt4></owl-date-time>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="poForm.guarantee === 'Bank'">
+                    <div class="row m-0 p-b-10">
+                        <div class="col-md-3">
+                            <label class="weight-bold">DD<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" placeholder="Enter DD" [(ngModel)]="poForm.bankDD" class="form-control"
+                                [disabled]="disableField">
+                        </div>
+                    </div>
+                    <div class="row m-0 p-b-10">
+                        <div class="col-md-3">
+                            <label class="weight-bold">Payment Terms<span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-md-9">
+                            <textarea class="form-group form-control" rows="3" placeholder="Others"
+                                [(ngModel)]="poForm.bankOthers" [disabled]="disableField"></textarea>
+                        </div>
+                    </div>
+                </ng-container>
+                <div class="row m-0 p-b-10">
+                    <div class="col-md-3">
+                        <label class="weight-bold">Invoice Status<span *ngIf="!hideMandatory"
+                                class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-md-9">
+                        <ng-select placeholder="Select Invoice Status..." [items]="invoiceItems" [clearable]="false"
+                            bindLabel="label" bindValue="value" [multiple]="false" class="list-form"
+                            [(ngModel)]="poForm.invoiceStatus" [disabled]="disableField">
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="row m-0 p-b-10">
+                    <div class="col-md-12">
+                        <label class="weight-bold">Materials List<span *ngIf="!hideMandatory"
+                                class="mandatory">*</span></label>
+                        <div style="margin-top: 15px;">
+                            <div>
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-bordered table-material">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 25%;"> Material name </th>
+                                                <th style="width: 8%;"> Stock </th>
+                                                <th *ngIf="!hideTableColumns" style="width: 10%;"> Ordered Qty </th>
+                                                <th style="width: 10%;">
+                                                    {{this.selectedPoType === 'inwardDC' && (this.poForm.inwardDCType === 'spareReturnfromSite' || this.poForm.inwardDCType === 'materialReceivedforRepair')?'Received':'Supplied'}}
+                                                    Qty </th>
+                                                <th style="width: 14%;"> Device ID </th>
+                                                <th style="width: 13%;"> Couriered Status </th>
+                                                <th style="width: 12%;"> Status </th>
+                                                <th style="width: 8%;" *ngIf="!disableField"> </th>
+                                            </tr>
+                                        </thead>
+                                        <tr *ngFor="let row of poForm.materialsList; let i= index">
+                                            <td>
+                                                <ng-container *ngIf="row.new && !disableField">
+                                                    <div *ngIf="row.materialName != 'others'">
+                                                        <ng-select placeholder="Select material"
+                                                            [items]="materialsItems" [clearable]="false"
+                                                            [multiple]="false" bindLabel="name" bindValue="id"
+                                                            [(ngModel)]="row.materialName" [virtualScroll]="true"
+                                                            (ngModelChange)="selectMaterial(row, i)" appendTo="body"
+                                                            class="form-group-table-material" [disabled]="disableField"
+                                                            [virtualScroll]="true">
+                                                        </ng-select>
+                                                    </div>
+                                                    <div *ngIf="row.materialName == 'others'">
+                                                        <input type="text" class="form-group-table form-control"
+                                                            [(ngModel)]="row.newMaterialName"
+                                                            [disabled]="disableField" />
+                                                    </div>
+                                                </ng-container>
+                                                <div *ngIf="disableField">
+                                                    {{(row.materialName != 'others'? row.materialName : row.newMaterialName)}}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {{ row.stock || '-' }}
+                                            </td>
+                                            <td *ngIf="!(this.selectedPoType === 'inwardDC' && (this.poForm.inwardDCType === 'spareReturnfromSite' ||
+                                                        this.poForm.inwardDCType === 'materialReceivedforRepair'))">
+                                                <div *ngIf="row.new">
+                                                    <input type="number" class="form-group-table form-control"
+                                                        [(ngModel)]="row.quantity" [disabled]="disableField" />
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div *ngIf="row.new">
+                                                    <input type="number" class="form-group-table form-control"
+                                                        [(ngModel)]="row.suppliedQuantity" [disabled]="disableField" />
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div *ngIf="row.new">
+                                                    <input type="text" class="form-group-table form-control"
+                                                        [(ngModel)]="row.deviceId" [disabled]="disableField" />
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div *ngIf="row.new">
+                                                    <ng-select placeholder="Select Couriered Status"
+                                                        [items]="courieredStatusList" [clearable]="false"
+                                                        [multiple]="false" bindLabel="label" bindValue="value"
+                                                        [(ngModel)]="row.courieredStatus" appendTo="body"
+                                                        class="form-group-table-material" [disabled]="disableField">
+                                                    </ng-select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div *ngIf="row.new">
+                                                    <ng-select placeholder="Select Material Status"
+                                                        [items]="materialStatusList" [clearable]="false"
+                                                        [multiple]="false" bindLabel="label" bindValue="value"
+                                                        [(ngModel)]="row.status" appendTo="body"
+                                                        class="form-group-table-material" [disabled]="disableField">
+                                                    </ng-select>
+                                                </div>
+                                            </td>
+                                            <td *ngIf="!disableField">
+                                                <span class="display-inline-table " (click)="editMaterialRow(row)">
+                                                    <i class="fa fa-pen action-icon" aria-hidden="true"></i>
+                                                </span>
+                                                <span class="display-inline-table " (click)="deleteMaterialRow(i)"
+                                                    *ngIf="poForm.materialsList.length>1">
+                                                    <i class="far fa-trash-alt action-icon " aria-hidden="true"></i>
+                                                </span>
+                                                <span class="display-inline-table" *ngIf="i == 0"
+                                                    (click)="addMaterialRow(i)">
+                                                    <i class="fas fa-plus-circle action-icon " aria-hidden="true"></i>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="row m-0 p-b-10">
+                    <div class="col-md-3">
+                        <label class="weight-bold">Dispatch Date<span *ngIf="!hideMandatory" class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-md-9">
+                        <input placeholder="Select Dispatch date" class="form-control" [(ngModel)]="poForm.dispatchDate" [owlDateTimeTrigger]="dt3" [owlDateTime]="dt3" [disabled]="disableField">
+                        <owl-date-time [pickerType]="'calendar'" #dt3></owl-date-time>
+                    </div>
+                </div>
+                <div class="row m-0 p-b-10">
+                    <div class="col-md-3">
+                        <label class="weight-bold">Delivery Date<span *ngIf="!hideMandatory" class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-md-9">
+                        <input placeholder="Select Delivery date" class="form-control" [(ngModel)]="poForm.deliveryDate" [owlDateTimeTrigger]="dt6" [owlDateTime]="dt6" [disabled]="disableField">
+                        <owl-date-time [pickerType]="'calendar'" #dt6></owl-date-time>
+                    </div>
+                </div>
+                <div class="row m-0 p-b-10">
+                    <div class="col-md-3">
+                        <label class="weight-bold">Carrier<span *ngIf="!hideMandatory" class="mandatory">*</span></label>
+                    </div>
+                    <div class="col-md-9">
+                        <ng-select placeholder="Select Carrier..." [items]="carrierItems" [clearable]="false" bindLabel="label" bindValue="value" [multiple]="false" class="list-form" [(ngModel)]="poForm.carrier" [disabled]="disableField">
+                        </ng-select>
+                    </div>
+                </div>
+                <ng-container *ngIf="poForm.carrier">
+                    <div class="row m-0 p-b-10" *ngIf="poForm.carrier === 'Others'">
+                        <div class="col-md-3">
+                            <label class="weight-bold">Others</label>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" class="form-group-table form-control" [(ngModel)]="poForm.carrierOthers" [disabled]="disableField" placeholder="New Carrier" />
+                        </div>
+                    </div>
+                    <div class="row m-0 p-b-10">
+                        <div class="col-md-3">
+                            <label class="weight-bold">Docket Number</label>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" placeholder="Enter Docket Number" [(ngModel)]="poForm.docketNumber" class="form-control" [disabled]="disableField">
+                        </div>
+                    </div>
+                    <div class="row m-0 p-b-10">
+                        <div class="col-md-3">
+                            <label class="weight-bold">Docket Date</label>
+                        </div>
+                        <div class="col-md-9">
+                            <input placeholder="Select Docket date" class="form-control" [(ngModel)]="poForm.docketDate" [owlDateTimeTrigger]="dt5" [owlDateTime]="dt5" [disabled]="disableField">
+                            <owl-date-time [pickerType]="'calendar'" #dt5></owl-date-time>
+                        </div>
+                    </div>
+                </ng-container> -->
+                <div class="row m-0 p-b-10">
+                    <div class="col-md-3">
+                        <label class="weight-bold">Engineer Spare Materials</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div>
+                            <div class="table-responsive">
+                                <table class="table table-hover table-bordered table-material">
+                                    <thead>
+                                        <tr>
+                                            <th class="w-35"> Material name </th>
+                                            <th class="w-20"> Quantity </th>
+                                            <th class="w-15"> Device ID </th>
+                                            <th class="w-15"> Status </th>
+                                            <th class="w-15" *ngIf="!disableField"> </th>
+                                        </tr>
+                                    </thead>
+                                    <tr *ngFor="let row of poForm.spareMaterials; let i= index">
+                                        <td>
+                                            <ng-container *ngIf="row.new && !disableField">
+                                                <div *ngIf="row.materialName != 'others'">
+                                                    <ng-select placeholder="Select material" [items]="materialsItems"
+                                                        [clearable]="false" [multiple]="false" bindLabel="name"
+                                                        bindValue="id" [(ngModel)]="row.materialName"
+                                                        [virtualScroll]="true" (ngModelChange)="selectMaterial1(row, i)"
+                                                        appendTo="body" class="form-group-table-material"
+                                                        [disabled]="disableField" [virtualScroll]="true">
+                                                    </ng-select>
+                                                </div>
+                                                <div *ngIf="row.materialName == 'others'">
+                                                    <input type="text" class="form-group-table form-control"
+                                                        [(ngModel)]="row.newMaterialName" [disabled]="disableField" />
+                                                </div>
+                                            </ng-container>
+                                            <div *ngIf="disableField">
+                                                {{(row.materialName != 'others'? row.materialName : row.newMaterialName)}}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div *ngIf="row.new">
+                                                <input type="number" class="form-group-table form-control"
+                                                    [(ngModel)]="row.quantity" [disabled]="disableField" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div *ngIf="row.new">
+                                                <input type="text" class="form-group-table form-control"
+                                                    [(ngModel)]="row.deviceId" [disabled]="disableField" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div *ngIf="row.new">
+                                                <ng-select placeholder="Select Material Status"
+                                                    [items]="spareMaterialStatusList" [clearable]="false"
+                                                    [multiple]="false" bindLabel="label" bindValue="value"
+                                                    [(ngModel)]="row.status" appendTo="body"
+                                                    class="form-group-table-material" [disabled]="disableField">
+                                                </ng-select>
+                                            </div>
+                                        </td>
+                                        <td *ngIf="!disableField">
+                                            <span class="display-inline-table " (click)="editMaterialRow1(row)">
+                                                <i class="fa fa-pen action-icon" aria-hidden="true"></i>
+                                            </span>
+                                            <span class="display-inline-table " (click)="deleteMaterialRow1(i)"
+                                                *ngIf="poForm.spareMaterials.length>1">
+                                                <i class="far fa-trash-alt action-icon " aria-hidden="true"></i>
+                                            </span>
+                                            <span class="display-inline-table"
+                                                *ngIf="i == poForm.spareMaterials.length-1"
+                                                (click)="addMaterialRow1(i)">
+                                                <i class="fas fa-plus-circle action-icon " aria-hidden="true"></i>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row m-0 p-b-10">
+                    <div class="col-md-3">
+                        <label class="weight-bold">Commissioning Duration (In Days)</label>
+                    </div>
+                    <div class="col-md-9">
+                        <input type="number" placeholder="Enter Commissioning Duration"
+                            [(ngModel)]="poForm.commissioningDuration" class="form-control" [disabled]="disableField">
+                    </div>
+                </div>
+                <div class="row m-0 p-b-10" *ngIf="purchaseOrderId">
+                    <div class="col-md-3">
+                        <label class="weight-bold">P.O Status</label>
+                    </div>
+                    <div class="col-md-9">
+                        <ng-select placeholder="Select Status..." appendTo="body" [items]="poStatusList"
+                            [clearable]="false" bindLabel="label" bindValue="value" [multiple]="false" class="list-form"
+                            [(ngModel)]="poForm.poStatus" [disabled]="disableField">
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button class="btn btn-secondary ml-2" (click)="goBack()">
+                    {{ !disableField ? 'Cancel' : 'Back'}}
+                </button>
+                <button class="btn btn-primary ml-2" (click)="saveDetails()" [disabled]="getDisabledStatus()"
+                    *ngIf="!disableField">Submit
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="activeTab === 'ticketList'">
+        <div class="col-md-12" *ngIf="ticketList">
+            <table aria-describedby="" class="table row-border hover table-hover" style="width:100%;">
+                <thead>
+                    <tr>
+                        <ng-container *ngFor="let headerSubscript of ticketList.headerContent;">
+                            <th scope="" *ngIf="headerSubscript.key!='read_status'">
+                                <span>{{ headerSubscript.label }}</span>
+                            </th>
+                        </ng-container>
+                        <th scope="" *ngIf="!isPOCancelled()" style="width: 105px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let bodySubscript of ticketList.bodyContent | searchFilter: searchKeys : filterTickets; let i=index;"
+                        style="cursor:pointer;" (click)="navigateToTicket(bodySubscript)"
+                        [ngStyle]="{'background-color': bodySubscript.read_status === false? 'white':'#fff' }">
+                        <ng-container *ngFor="let headerSubscript of ticketList.headerContent">
+                            <td *ngIf="headerSubscript.key!='read_status'">
+                                <ng-container [ngSwitch]="headerSubscript.key">
+                                    <span *ngSwitchCase="'ticketStatus'">
+                                        {{getMapping[bodySubscript[headerSubscript.key]]}}
+                                    </span>
+                                    <span *ngSwitchDefault>
+                                        {{bodySubscript[headerSubscript.key]}}
+                                    </span>
+                                </ng-container>
+                            </td>
+                        </ng-container>
+                        <td *ngIf="!isPOCancelled()">
+                            <ng-container *ngIf="checkEditAvailability(bodySubscript)">
+                                <span class="icon-spacing"
+                                    (click)="editSiteVisit(bodySubscript);$event.stopPropagation()"><i
+                                        aria-hidden="true" class="fa fa-pencil-alt"></i></span>
+                                <span (click)="deleteTicketConfirmation(bodySubscript);$event.stopPropagation()"><i
+                                        aria-hidden="true" class="fa fa-trash-alt"></i></span>
+                            </ng-container>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="activeTab === 'auditTab'">
+        <ng-container *ngIf="poForm?.activity else noActivity">
+            <div class="mt-3">
+                <kl-activity *ngIf="poForm?.activity" [activityData]="poForm.activity">
+                </kl-activity>
+            </div>
+        </ng-container>
+        <ng-template #noActivity>
+            <div class="empty-state font-weight-light pl-0 pt-2 text-left">
+                <label class="no-payments">No Audits Yet</label><br>
+            </div>
+        </ng-template>
+    </div>
+    <ng-container class="" *ngIf="activeTab === 'challanDetails'">
+        <app-simple-table-with-pagination
+            *ngIf="deliveryChallanTable?.tableData?.headerContent?.length > 0 && !showEmptyData"
+            (actionEmitter)="handleTableEmitter($event);" [tableDataWithActions]="deliveryChallanTable"
+            [tableReloadEvent]="tableReloadSubject.asObservable()">
+        </app-simple-table-with-pagination>
+    </ng-container>
+</div>
+
+<!-- Confirmation Popup -->
+<app-confirmation-dialog *ngIf="showConfirmation" [confirmJson]="confirmJson"
+    (actionPerformed)="actionPerformed($event)"> </app-confirmation-dialog>

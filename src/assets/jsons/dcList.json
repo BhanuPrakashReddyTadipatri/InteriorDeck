@@ -1,0 +1,202 @@
+{
+    "status": true,
+    "message": "Challan listed Successfully",
+    "data": {
+        "tableData": {
+            "bodyContent": [
+                {
+                    "challanNo": "GL/DC/2020/02/56",
+                    "poNo": "ACT/325/19-20",
+                    "poDate": "05-03-2019 09:44:59",
+                    "siteName": "Anmol Chemicals ",
+                    "panNo": "AAFCK4119A",
+                    "gstNo": "29AAFCK4119A1ZV",
+                    "challanId": "1"
+                },
+                {
+                    "challanNo": "GL/DC/2020/02/56",
+                    "poNo": "ACT/325/19-20",
+                    "poDate": "05-03-2019 09:44:59",
+                    "siteName": "Anmol Chemicals ",
+                    "panNo": "AAFCK4119A",
+                    "gstNo": "29AAFCK4119A1ZV",
+                    "challanId": "2"
+                },
+                {
+                    "challanNo": "GL/DC/2020/02/56",
+                    "poNo": "ACT/325/19-20",
+                    "poDate": "05-03-2019 09:44:59",
+                    "siteName": "Anmol Chemicals ",
+                    "panNo": "AAFCK4119A",
+                    "gstNo": "29AAFCK4119A1ZV",
+                    "challanId": "3"
+                },
+                {
+                    "challanNo": "GL/DC/2020/02/56",
+                    "poNo": "ACT/325/19-20",
+                    "poDate": "05-03-2019 09:44:59",
+                    "siteName": "Anmol Chemicals ",
+                    "panNo": "AAFCK4119A",
+                    "gstNo": "29AAFCK4119A1ZV",
+                    "challanId": "5"
+                },
+                {
+                    "challanNo": "GL/DC/2020/02/56",
+                    "poNo": "ACT/325/19-20",
+                    "poDate": "05-03-2019 09:44:59",
+                    "siteName": "Anmol Chemicals ",
+                    "panNo": "AAFCK4119A",
+                    "gstNo": "29AAFCK4119A1ZV",
+                    "challanId": "6"
+                },
+                {
+                    "challanNo": "GL/DC/2020/02/56",
+                    "poNo": "ACT/325/19-20",
+                    "poDate": "05-03-2019 09:44:59",
+                    "siteName": "Anmol Chemicals ",
+                    "panNo": "AAFCK4119A",
+                    "gstNo": "29AAFCK4119A1ZV",
+                    "challanId": "10"
+                },
+                {
+                    "challanNo": "GL/DC/2020/02/56",
+                    "poNo": "ACT/325/19-20",
+                    "poDate": "05-03-2019 09:44:59",
+                    "siteName": "Anmol Chemicals ",
+                    "panNo": "AAFCK4119A",
+                    "gstNo": "29AAFCK4119A1ZV",
+                    "challanId": "11"
+                },
+                {
+                    "challanNo": "GL/DC/2020/02/56",
+                    "poNo": "ACT/325/19-20",
+                    "poDate": "05-03-2019 09:44:59",
+                    "siteName": "Anmol Chemicals ",
+                    "panNo": "AAFCK4119A",
+                    "gstNo": "29AAFCK4119A1ZV",
+                    "challanId": "12"
+                },
+                {
+                    "challanNo": "GL/DC/2020/02/56",
+                    "poNo": "ACT/325/19-20",
+                    "poDate": "05-03-2019 09:44:59",
+                    "siteName": "Anmol Chemicals ",
+                    "panNo": "AAFCK4119A",
+                    "gstNo": "29AAFCK4119A1ZV",
+                    "challanId": "13"
+                },
+                {
+                    "challanNo": "GL/DC/2020/02/56",
+                    "poNo": "ACT/325/19-20",
+                    "poDate": "05-03-2019 09:44:59",
+                    "siteName": "Anmol Chemicals ",
+                    "panNo": "AAFCK4119A",
+                    "gstNo": "29AAFCK4119A1ZV",
+                    "challanId": "14"
+                },
+                {
+                    "challanNo": "GL/DC/2020/02/56",
+                    "poNo": "ACT/325/19-20",
+                    "poDate": "05-03-2019 09:44:59",
+                    "siteName": "Anmol Chemicals ",
+                    "panNo": "AAFCK4119A",
+                    "gstNo": "29AAFCK4119A1ZV",
+                    "challanId": "15"
+                },
+                {
+                    "challanNo": "GL/DC/2020/02/56",
+                    "poNo": "ACT/325/19-20",
+                    "poDate": "05-03-2019 09:44:59",
+                    "siteName": "Anmol Chemicals ",
+                    "panNo": "AAFCK4119A",
+                    "gstNo": "29AAFCK4119A1ZV",
+                    "challanId": "16"
+                },
+                {
+                    "challanNo": "GL/DC/2020/02/56",
+                    "poNo": "ACT/325/19-20",
+                    "poDate": "05-03-2019 09:44:59",
+                    "siteName": "Anmol Chemicals ",
+                    "panNo": "AAFCK4119A",
+                    "gstNo": "29AAFCK4119A1ZV",
+                    "challanId": "17"
+                },
+                {
+                    "challanNo": "GL/DC/2020/02/56",
+                    "poNo": "ACT/325/19-20",
+                    "poDate": "05-03-2019 09:44:59",
+                    "siteName": "Anmol Chemicals ",
+                    "panNo": "AAFCK4119A",
+                    "gstNo": "29AAFCK4119A1ZV",
+                    "challanId": "18"
+                },
+                {
+                    "challanNo": "GL/DC/2020/02/56",
+                    "poNo": "ACT/325/19-20",
+                    "poDate": "05-03-2019 09:44:59",
+                    "siteName": "Anmol Chemicals ",
+                    "panNo": "AAFCK4119A",
+                    "gstNo": "29AAFCK4119A1ZV",
+                    "challanId": "19"
+                },
+                {
+                    "challanNo": "GL/DC/2020/02/56",
+                    "poNo": "ACT/325/19-20",
+                    "poDate": "05-03-2019 09:44:59",
+                    "siteName": "Anmol Chemicals ",
+                    "panNo": "AAFCK4119A",
+                    "gstNo": "29AAFCK4119A1ZV",
+                    "challanId": "20"
+                },
+                {
+                    "challanNo": "GL/DC/2020/02/56",
+                    "poNo": "ACT/325/19-20",
+                    "poDate": "05-03-2019 09:44:59",
+                    "siteName": "Anmol Chemicals ",
+                    "panNo": "AAFCK4119A",
+                    "gstNo": "29AAFCK4119A1ZV",
+                    "challanId": "28"
+                },
+                {
+                    "challanNo": "GL/DC/2020/02/56",
+                    "poNo": "ACT/325/19-20",
+                    "poDate": "05-03-2019 09:44:59",
+                    "siteName": "Anmol Chemicals ",
+                    "panNo": "AAFCK4119A",
+                    "gstNo": "29AAFCK4119A1ZV",
+                    "challanId": "30"
+                }
+            ],
+            "headerContent": [
+                {
+                    "label": "Challan ID",
+                    "key": "challanId"
+                },
+                {
+                    "label": "Challan No",
+                    "key": "challanNo"
+                },
+                {
+                    "label": "PO No",
+                    "key": "poNo"
+                },
+                {
+                    "label": "PO Date",
+                    "key": "poDate"
+                },
+                {
+                    "label": "Site Name",
+                    "key": "siteName"
+                },
+                {
+                    "label": "PAN NO.",
+                    "key": "panNo"
+                },
+                {
+                    "label": "GST No",
+                    "key": "gstNo"
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,297 @@
+<div class="col-md-12 page-heading">
+  <h5>Ticket Workflow</h5>
+</div>
+
+
+<div class="page-inner">
+  <div>
+    <div class="col-md-7 " style="margin:auto;">
+      <div class="center-align">
+        <ul class="steps steps-">
+          <li class="step"
+            [ngClass]="{'active': activeTab==='ticketDetails' || activeTab==='readinessStatus' || activeTab ==='assignEngineers' }">
+            <a class="step-trigger"><span class="step-indicator step-indicator-icon"><i
+                  class="fas fa-info-circle"></i></span> <span class="d-none d-sm-inline">Ticket Details</span></a>
+          </li>
+          <li class="step" [ngClass]="{'active': activeTab==='readinessStatus' || activeTab==='assignEngineers'}">
+            <a class="step-trigger"><span class="step-indicator step-indicator-icon"><i class="fas fa-tasks"></i></span>
+              <span class="d-none d-sm-inline">Readiness Status</span></a>
+          </li>
+          <li class="step" [ngClass]="{'active': activeTab==='assignEngineers'}">
+            <a class="step-trigger"><span class="step-indicator step-indicator-icon"><i
+                  class="far fa-calendar-alt"></i></span>
+              <span class="d-none d-sm-inline">Schedule Site Visit</span></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8" style="margin:auto;">
+    <br>
+    <div class="form-card-workflow">
+      <div *ngIf="activeTab === 'ticketDetails'">
+        <div *ngIf="ticketDetails" style="margin:auto;">
+          <div id="accordion1">
+            <div class="card">
+              <div class="card-header" id="headingOne">
+                <h6 class="mb-0" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
+                  aria-controls="collapseOne">
+                  <span> Ticket Details</span> <span class=" right-align"> <i class="fas fa-chevron-down"></i></span>
+                </h6>
+              </div>
+              <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion1">
+                <div class="card-body">
+                  <label class="col-md-4">Ticket Id </label> <label class="col-md-4 label-class">
+                    {{ticketDetails.ticketId}}</label><br>
+                  <label class="col-md-4">Ticket Type </label> <label class="col-md-4 label-class">
+                    {{ticketDetails.ticket_type}}</label><br>
+                  <label class="col-md-4">Ticket Status</label> <label class="col-md-4 label-class">
+                    {{statusParser(ticketDetails.ticketStatus)}}</label><br>
+                  <label class="col-md-4">Created By</label> <label class="col-md-4 label-class">
+                    {{ticketDetails.activityInfo.updatedBy}}</label><br>
+                  <label class="col-md-4">Created Time</label> <label class="col-md-4 label-class">
+                    {{ticketDetails.activityInfo.updatedTime  | amFromUtc | amLocal | amDateFormat:'MMMM Do YYYY, h:mm a'}}</label><br>
+                  <label class="col-md-4">Purpose</label> <label class="col-md-4 label-class">
+                    {{ticketDetails.general.purposeDescription}}</label><br>
+                  <label class="col-md-4">Category</label> <label class="col-md-4 label-class">
+                    {{ticketDetails.general.category}}</label><br>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="accordion3">
+            <div class="card">
+              <div class="card-header" id="headingThree">
+                <h6 class="mb-0" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true"
+                  aria-controls="collapseThree">
+                  <span> Site Details</span> <span class=" right-align"> <i class="fas fa-chevron-down"></i></span>
+                </h6>
+              </div>
+              <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion3">
+                <div class="card-body">
+                  <label class="col-md-4">Site name</label> <label class="col-md-4 label-class">
+                    {{ticketDetails.siteDetails.siteName}}</label><br>
+                  <label class="col-md-4">State</label> <label class="col-md-4 label-class">
+                    {{ticketDetails.siteDetails.state}}</label><br>
+                  <label class="col-md-4">District</label> <label class="col-md-4 label-class">
+                    {{ticketDetails.siteDetails.district}}</label><br>
+                  <label class="col-md-4">Place </label> <label class="col-md-4 label-class">
+                    {{ticketDetails.siteDetails.place}}</label><br>
+                  <label class="col-md-4">Landmark </label> <label class="col-md-4 label-class">
+                    {{ticketDetails.siteDetails.landmark}}</label><br>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="accordion4" *ngIf="ticketDetails.keyGoals">
+            <div class="card">
+              <div class="card-header" id="headingFour">
+                <h6 class="mb-0" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true"
+                  aria-controls="collapseFour">
+                  <span> Goals</span> <span class=" right-align"> <i class="fas fa-chevron-down"></i></span>
+                </h6>
+              </div>
+              <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion4">
+                <div class="card-body">
+                  <ng-container *ngFor="let goal of ticketDetails.keyGoals; let i = index;">
+                    <div>
+                      <div class="col-md-9 inline">
+                        <label [ngClass]="{'completed': goal.status==='completed'}">{{i+1}}. &nbsp;{{goal.goal}}</label>
+                      </div>
+                      <div class="col-md-3 inline">
+                        <div *ngIf="showGoalActions">
+                          <label class="p-10 cursor-pointer" (click)="completeGoal(goal)" ngbTooltip="Completed"> <i
+                              class="fas fa-check readiness-icon gray-label"
+                              [ngClass]="{'green-label':completeCheck(goal)}"></i>
+                          </label>
+                          <label class="p-10 cursor-pointer" (click)="incompleteGoal(goal)" ngbTooltip="Incomplete">
+                            <i class="fas fa-times readiness-icon gray-label"
+                              [ngClass]="{'red-label': incompleteCheck(goal)}"></i>
+                          </label>
+                          <label class="p-10 cursor-pointer" (click)="partialcompleteGoal(goal)"
+                            ngbTooltip="Partially Completed"><i class="fas fa-check-circle readiness-icon gray-label"
+                              [ngClass]="{'yellow-label': partialCheck(goal)}"></i>
+                          </label>
+                        </div>
+                        <ng-template #popContent>
+                          <textarea class="pop-textarea form-control" rows="3" [(ngModel)]="goal.notes"
+                            [disabled]=!showGoalActions>
+                              </textarea>
+                          <span *ngIf="showGoalActions" class="right-align" (click)="saveGoal(goal);p.close()">Save <i
+                              class="far fa-save action-icon"></i></span>
+                        </ng-template>
+                        <ng-template #popTitle>Notes</ng-template>
+                        <span *ngIf="showGoalActions" class=" notes-icon inline" [autoClose]="'outside'" #p="ngbPopover"
+                          [ngbPopover]="popContent" [popoverTitle]="popTitle" container="body">
+                          <i *ngIf="goal.notes.length>0" class="fas fa-sticky-note action-icon"></i>
+                          <i *ngIf="goal.notes.length===0" class="far fa-sticky-note action-icon"></i>
+                        </span>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="accordion5">
+            <div class="card">
+              <div class="card-header" id="headingFive">
+                <h6 class="mb-0" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true"
+                  aria-controls="collapseFive">
+                  <span> Material Required</span> <span class=" right-align"> <i class="fas fa-chevron-down"></i></span>
+                </h6>
+              </div>
+              <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion5">
+                <div class="card-body">
+                  <div *ngIf="ticketDetails.materialsRequired.length">
+                    <div class="table-responsive">
+                      <table class="table table-hover table-bordered table-material">
+                        <thead>
+                          <tr>
+                            <th> S.No. </th>
+                            <th> Material ID </th>
+                            <th> Material name </th>
+                            <th> Quantity </th>
+                          </tr>
+                        </thead>
+                        <tr *ngFor="let row of ticketDetails.materialsRequired;let i = index">
+                          <td> {{i+1}}</td>
+                          <td>{{row.materialCode}}</td>
+                          <td> {{row.materialName}}</td>
+                          <td>{{row.quantity}}</td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="accordion6">
+              <div class="card">
+                <div class="card-header" id="headingSix">
+                  <h6 class="mb-0" data-toggle="collapse" data-target="#collapseSix" aria-expanded="true"
+                    aria-controls="collapseSix">
+                    <span>Site Contact</span> <span class=" right-align"> <i class="fas fa-chevron-down"></i></span>
+                  </h6>
+                </div>
+                <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordion6">
+                  <div class="card-body">
+                    <div *ngIf="ticketDetails.siteContact.length">
+                      <div class="table-responsive">
+                        <table class="table table-hover table-bordered table-responsive">
+                          <thead>
+                            <tr>
+                              <th> S.No. </th>
+                              <th> Name </th>
+                              <th> Designation </th>
+                              <th> Email </th>
+                              <th> Mobile </th>
+                            </tr>
+                          </thead>
+                          <tr *ngFor="let row of ticketDetails.siteContact;let i = index">
+                            <td> {{i+1}}</td>
+                            <td> {{row.name}} </td>
+                            <td> {{row.designation}}</td>
+                            <td> {{row.email}}</td>
+                            <td> {{row.contactNo}} </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="activeTab === 'readinessStatus'">
+        <div class="card">
+          <div class="card-header">
+            <div style="padding-top:1rem;">
+              <div class="form-group col-md-4 inline">
+                <label class="label-class">Select template type<span class="mandatory">*</span></label>
+                <ng-select placeholder="Select site type" [items]="templateTypeList" [clearable]="false"
+                  [multiple]="false" class="list-form" (ngModelChange)="selectTemplateType($event)"
+                  [(ngModel)]="templateData" [disabled]="false" bindLabel="templateName">
+                </ng-select>
+              </div>
+            </div>
+          </div>
+          <ng-container *ngIf="readinessCondition">
+            <div *ngIf="readinessCondition.length!=0" class="card-body">
+              <ng-container *ngFor="let conditionItem of readinessCondition">
+                <div class="hover-background">
+                  <div class="col-md-8 inline">
+                    <label>{{conditionItem.condition}}</label>
+                  </div>
+                  <div class="col-md-3 inline v-a-t">
+                    <label class="p-8 cursor-pointer" (click)="ready(conditionItem)" ngbTooltip="Ready"> <i
+                        class="fas fa-check readiness-icon gray-label"
+                        [ngClass]="{'green-label':readyCheck(conditionItem)}"></i>
+                    </label>
+                    <label class="p-8 cursor-pointer" (click)="notReady(conditionItem)" ngbTooltip="Not Ready !">
+                      <i class="fas fa-times readiness-icon gray-label"
+                        [ngClass]="{'red-label': notReadyCheck(conditionItem)}"></i>
+                    </label>
+                    <label class="p-8 cursor-pointer" (click)="waiting(conditionItem)" ngbTooltip="waiting"><i
+                        class="far fa-clock readiness-icon gray-label"
+                        [ngClass]="{'yellow-label': waitingCheck(conditionItem)}"></i>
+                    </label>
+                    <ng-template #popContent>
+                      <textarea class="pop-textarea form-control" rows="3" [(ngModel)]="conditionItem.notes">
+                            </textarea>
+                      <span class="right-align" (click)="saveConditionNotes(conditionItem);p.close()">Save <i
+                          class="far fa-save action-icon"></i></span>
+                    </ng-template>
+                    <ng-template #popTitle>Notes</ng-template>
+                    <span class="notes-icon inline" style="float:right" ngbTooltip="Notes" [autoClose]="'outside'"
+                      #p="ngbPopover" [ngbPopover]="popContent" [popoverTitle]="popTitle" container="body">
+                      <i *ngIf="conditionItem.notes.length>0" class="fas fa-sticky-note action-icon"></i>
+                      <i *ngIf="conditionItem.notes.length===0" class="far fa-sticky-note action-icon"></i>
+                    </span>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+            <div *ngIf="readinessCondition.length==0">
+              <div class="col-md-12" style="margin-top:24px">
+                <label class="label-class">
+                  Readiness description Description <span class="mandatory">*</span>
+                </label>
+                <textarea class="form-group form-control" rows="4" [(ngModel)]="description">
+                </textarea>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      <div *ngIf="activeTab==='assignEngineers'">
+        <app-assign-engineers [ticketId]="ticketId" [startDate]="ticketDetails.general.expectedStartDate"
+          [endDate]="ticketDetails.general.expectedEndDate" (engineersListUpdate)="engineersListUpdate($event)">
+        </app-assign-engineers>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="col-md-8" style="margin:auto;">
+
+    <button *ngIf=" activeTab != 'assignEngineers'" class="btn btn-primary"
+      (click)="activeTab==='readinessStatus'?nextUpdateReadinessStatus() :activeTab='readinessStatus'"
+      [disabled]="activeTab==='readinessStatus'&& !nextDisabled">
+      Next <i aria-hidden="true" class="fas fa-arrow-circle-right"></i></button>
+    <button *ngIf=" activeTab === 'assignEngineers'" class="btn btn-primary ml-2"
+      (click)="assignEngineersConfirmartion()" [disabled]="proceedDisabled">
+      Schedule Visit</button>
+    <button *ngIf=" activeTab != 'ticketDetails'" class="btn btn-primary ml-2"
+      (click)="activeTab==='assignEngineers'?activeTab='readinessStatus':activeTab='ticketDetails'">
+      <i aria-hidden="true" class="fas fa-arrow-circle-left"></i> Previous
+    </button>
+    <button *ngIf=" activeTab == 'readinessStatus'" class="btn btn-primary ml-2"
+      (click)="updateReadinessStatus()">
+      Save</button>
+  </div>
+</div>
+
+<app-confirmation-dialog *ngIf="showConfirmation" [confirmJson]="confirmJson"
+  (actionPerformed)="actionPerformed($event)"> </app-confirmation-dialog>

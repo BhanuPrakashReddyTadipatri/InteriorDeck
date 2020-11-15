@@ -1,0 +1,181 @@
+<div class="col-md-12 page-heading">
+  <h5>Site Expenses</h5>
+</div>
+
+<div class="page-inner">
+  <div class="row scroll">
+    <div class="col-md-9">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h4 class="card-title mb-0">Site Details</h4>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="weight-bold">Site Name<span class="mandatory">*</span></label>
+                    <ng-select [ngClass]="{'m-b-16': siteIsOther}" placeholder="Select site..." [items]="siteList"
+                      [clearable]="false" [multiple]="false" [searchFn]="customSearchFn" class="list-form"
+                      [(ngModel)]="siteExpenses1.siteName" (ngModelChange)="selectSite()">
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="weight-bold">Ticket No<span class="mandatory">*</span></label>
+                    <ng-select placeholder="Select ticketId..." [items]="ticketNumbers"
+                      [clearable]="false" [multiple]="false" [searchFn]="customSearchFn" class="list-form"
+                      [(ngModel)]="siteExpenses1.ticketId">
+                    </ng-select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col-md-12" style=" margin-top: -5px">
+          <div *ngIf="userRole === 'siteEngineer'" class="left-align">
+              <h6 class="mb-0">
+              <span>Add Expenses</span>
+            </h6>
+          </div>
+          <div *ngIf="userRole === 'manager'" class="left-align">
+              <h6 class="mb-0">
+              <span>Expenses</span>
+            </h6>
+          </div>
+          
+          <div class="right-align">
+            <button class="btn btn-ghost btn-outline-dark mb-1" *ngIf="userRole === 'siteEngineer'"
+              (click)="addAccordion()">
+              Add <i class="fa fa-plus-circle"></i></button>
+          </div>
+        </div>
+      </div>
+      <div class="row" style=" margin-top: 5px">
+        <div class="col-md-12">
+          <div id="accordion1">
+            <div class="card" *ngFor="let expenses of siteExpenses; let i = index">
+              <div class="card-header" id="headingOne">
+                <div class="row">
+                  <div class="col-md-8">
+                    <h6 class="mb-0" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
+                      aria-controls="collapseOne">
+                      <span>Expenses {{i + 1}}</span>
+                    </h6>
+                  </div>
+                  <div class="col-md-4 mt-2">
+                    <button class="btn btn-sm btn-ghost btn-outline-dark ml-2" *ngIf="userRole === 'siteEngineer'"
+                      (click)="deleteAccordion(i)" style="float: right;">
+                      <i class="far fa-trash-alt action-icon"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion1">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="weight-bold">Expenses type<span class="mandatory">*</span></label>
+                        <ng-container>
+                          <div *ngIf="expenses.expensesType != 'Others'">
+                            <ng-select placeholder="Select Expenses type..." [items]="expensesType" [clearable]="false"
+                              [multiple]="false" bindLabel="name" [(ngModel)]="expenses.expensesType" class="list-form">
+                            </ng-select>
+                          </div>
+                          <div *ngIf="expenses.expensesType == 'Others'">
+                            <input type="text" class="form-control" [(ngModel)]="expenses.newExpensesType" />
+                          </div>
+                        </ng-container>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="weight-bold">Amount<span class="mandatory">*</span></label>
+                        <input type="number" placeholder="Expenses" class="form-control" [(ngModel)]="expenses.amount"
+                          name="expenses" [required]="true">
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="weight-bold">Description<span class="mandatory">*</span></label>
+                        <textarea class="form-group form-control" rows="2" placeholder="Description"
+                          [(ngModel)]="expenses.description" name="description" [required]="true"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="exampleInputFile">Attach File</label>
+                <input type="file" class="form-control" (change)="onFileChange($event)" [(ngModel)]="siteExpenses1.file" #fileInput multiple>
+            </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <ng-sidebar-container>
+
+        <!-- A sidebar -->
+        <ng-sidebar [(opened)]="_opened" position="right" #sidebar>
+          <div>
+            <button (click)="sidebar.close()" class="btn btn-primary btn-sm ml-0"><i
+              class="fas fa-comment"></i> Comments</button>
+          </div>
+          <div class="row mt-2" *ngIf="commentListData" style="height: 48vh; overflow-y: auto;">
+            <div class="col-md-12" *ngFor="let comment of commentListData;">
+              <div>
+                  <p>
+                      <span><b>{{comment.user}}</b></span>
+                  </p>
+                  <p>
+                      {{comment.comments}}
+                  </p>
+              </div>
+            </div>
+          </div>
+          <div class="row comments">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="exampleInputFile" style="display:none">Comments</label>
+                <textarea type="text" class="form-control" placeholder="Enter Comments" [(ngModel)]="comments"
+                  name="comments" (keyup.enter)="saveComments()"></textarea>
+              </div>
+            </div>
+          </div>
+        </ng-sidebar>
+
+        <!-- Page content -->
+        <div ng-sidebar-content>
+          <button (click)="_toggleSidebar()" class="btn btn-primary btn-sm" style="float:right;"><i
+              class="fas fa-comment"></i> Comments</button>
+        </div>
+
+      </ng-sidebar-container>
+    </div>
+  </div>
+
+  <div *ngIf="userRole === 'siteEngineer'">
+    <div>
+      <div class="col-md-12">
+        <hr>
+      </div>
+      <div class="col-md-6" style="margin:auto;">
+        <div class="right-align">
+          <button class="btn btn-primary m-10" (click)="saveExpenses()" [disabled]="disabledsave()">
+            save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
